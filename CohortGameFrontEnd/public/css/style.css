@@ -1,0 +1,309 @@
+body {
+	background: #E5E5E5;
+	font-family: 'Lucida Grande', verdana, arial, helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+/* Clearfix */
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {display: inline-block;}
+.clearfix {display: block;}
+
+
+ .field_with_errors input{
+  border: 1px solid red !important;
+}
+
+/* ======================================================
+	Main Header
+========================================================= */
+#header {
+	background: #036;
+	margin: 0;
+	padding: 10px 10px 0 10px;
+}
+
+#header h1 {
+	clear: both;
+  color: #FFC438;
+  font-family: helvetica, arial sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+	margin: 0;
+	padding: 6px 12px 0 0;
+}
+
+#header h2 {
+	color: #FAFAFA;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+}
+
+#header ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#header li {
+	display: inline;
+}
+
+/* Left links */
+#header .links a {
+	color: #FFF;
+	border-right: 1px solid #1D5385;
+	float: left;
+	font-size: 0.8em;
+	padding: 0 10px 0 10px;
+	text-decoration: none;
+}
+
+#header .links a.first {
+	padding-left: 0;
+}
+
+#header .links a.last{
+	border-right: 0;
+}
+
+#header .links a:hover {
+	text-decoration: underline;
+}
+
+/* Right links */
+#header .links.right {
+	color: #E5E5E5;
+	float: right;
+}
+
+/* ======================================================
+	Left Tabs
+========================================================= */
+#header .tabs {
+	float: left;
+	padding: 12px 0 4px 0;
+}
+
+#header .tabs a {
+	background: #1A4F85;
+	color: #FFF;
+  font-family: Lucida, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 12px;
+	margin: 0;
+	padding: 4px 10px 4px 10px;
+	text-decoration: none;
+}
+
+#header .tabs a.active {
+	background: #e5e5e5;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdfdfd', endColorstr='#e5e5e5'); /* IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#e5e5e5)); /* webkit */
+	background: -moz-linear-gradient(top,  #fdfdfd,  #e5e5e5); /* firefox 3.6+ */
+	color: #333;
+	font-weight: bold;
+}
+
+#header .tabs a.active:hover {
+	background: #e5e5e5;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdfdfd', endColorstr='#e5e5e5'); /* IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#e5e5e5)); /* webkit */
+	background: -moz-linear-gradient(top,  #fdfdfd,  #e5e5e5); /* firefox 3.6+ */
+	color: #333;
+}
+
+#header .tabs a:hover {
+	background: #1D64AD;
+	color: #FFF;
+}
+
+
+/* Right tabs */
+#header .tabs.right {
+	float: right;
+}
+
+/* ======================================================
+	Main
+========================================================= */
+#sheet {
+	margin: auto;
+	padding: 0;
+}
+
+/* ======================================================
+	Left Side
+========================================================= */
+#sheet div.left {
+  background: #fff;
+	float: left;
+	margin: auto;
+	padding: 0;
+	text-align: left;
+	width: 67%;
+	
+	-moz-box-shadow: 3px 3px 4px #bbb;
+  -webkit-box-shadow: 3px 3px 4px #bbb;
+  box-shadow: 3px 3px 4px #bbb;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+
+}
+
+#sheet div.left .header {
+	background: #d1e1c6b1;
+	display: block;
+	height: 24px;
+	margin: 0 0 10px 0;
+	padding: 10px;
+}
+
+#sheet .left .header h1 {
+	color: #333;
+	display: inline;
+	/* float: left; */
+	font-family: 'Lucida Grande', arial, sans-serif;	
+	font-size: 18px;
+	margin: 0;
+	padding: 0 10px 0 0;
+}
+
+#sheet .left .header h3 {
+	color: #888;
+	display: inline;
+	float: left;
+	font-size: 12px;
+	margin: 0;
+	padding: 4px 10px 0 0;
+}
+
+/* These links are on the right side of the sheet header bar */
+#sheet .left .header .links {
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+
+#sheet .left .header .links ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#sheet .left .header .links li {
+	display: inline;
+	margin: 0;
+	padding: 0 0 0 10px;
+}
+
+#sheet .left .header .links li a {
+	color: #f00;
+	font-family: verdana;
+	font-size: 11px;
+	margin: 0;
+	padding: 0;
+	text-decoration: underline;
+}
+
+#sheet .left .header .links li a:hover {
+	background: #f00;
+	color: #fff;
+	text-decoration: none;
+}
+
+
+/* Sheet content */
+#sheet .left .content {
+	margin: auto;
+	padding: 20px;
+}
+
+/* Left Headers */
+#sheet .left .content h1 {
+	font-size: 28px;
+	color: #333;
+	margin: 0 0 6px 0;
+	padding: 0;
+}
+
+#sheet .left .content h2 {
+	background: #FFB41E;
+	color: #333;
+	font-size: 22px;
+	margin: 0 0 6px 0;
+	padding: 4px;
+}
+
+#sheet .left .content h3 {
+	border-bottom: 1px #333 solid;
+	color: #333;
+	font-size: 22px;
+	margin: 0 0 6px 0;
+	padding: 0;
+}
+
+#sheet .left .content h4 {
+	color: #333;
+	float: right;
+	font-size: 16px;
+	margin: 0 0 6px 0;
+	padding: 0;
+}
+
+
+
+/* ======================================================
+	Right Side
+========================================================= */
+#sheet div.right {
+	float: left;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	width: 30%;
+}
+
+#sheet div.right .header {
+	background: #EDF3FE;
+	margin: 0;
+	padding: 10px;
+}
+
+#sheet .right .header h1 {
+	color: #333;
+	display: inline;
+	font-family: 'Lucida Grande', arial, sans-serif;
+	font-size: 13px;
+	margin: 0;
+	padding: 0 10px 0 0;
+}
+
+#sheet .right .content {
+	color: #222;
+	margin: 0 0 20px 0;
+	padding: 0;
+}
+
+#sheet .right .content p {
+	margin: 0;
+	padding: 10px;
+}
+
+#sheet .right .content h1 {
+	font-size: 24px;
+}
+
+
+
+
