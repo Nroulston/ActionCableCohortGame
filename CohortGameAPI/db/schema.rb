@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_09_11_192942) do
   end
 
   create_table "players", force: :cascade do |t|
+    t.string "name"
     t.integer "GameRoom_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
