@@ -7,19 +7,40 @@ const HEADERS = {
 };
 
 import ActionCable from 'actioncable'
+const cable = ActionCable.createConsumer(API_WS_ROOT)
+const body = () => document.querySelector("body")
+document.addEventListener("DOMContentLoaded", function() {
+  const div = document.createElement("div")
+  const formDiv = document.createElement('div')
+  const form = document.createElement("FORM")
+  const inputDiv = document.createElement("div")
+  const inputField = document.createElement('input')
+  const inputLabel = document.createElement('label')
 
-var cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+  inputField.placeholder = "Name"
+
+  body().append(div)
+  div.append(form)
+  form.append(formDiv)
+  formDiv.append(inputDiv)
+  inputDiv.append(inputField)
+  inputDiv.append(inputLabel)
+
+})
+
+
 
 cable.subscriptions.create('GameRoomChannel', {
-  // connected() {
-  //   console.log("connected to the room")
-  // },
+  connected() {
+    console.log("connected to the room")
+  },
 
-  // disconnected() {
-  //   // Called when the subscription has been terminated by the server
-  // },
+  disconnected() {
+    // Called when the subscription has been terminated by the server
+  },
 
-  // received(data) {
-  //   alert(data['message'])
-  // },
+  received(data) {
+    alert(data['message'])
+  },
 });
+
