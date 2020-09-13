@@ -11,16 +11,24 @@ const HEADERS = {
 import ActionCable from 'actioncable'
 const cable = ActionCable.createConsumer(API_WS_ROOT)
 const body = () => document.querySelector("body")
+const userLogInDiv = () => document.querySelector('#showLogIn')
+
+
 const inputForm = () => document.querySelector("#user_name")
 const submitName = () => { 
  inputForm().addEventListener('keydown', function(e) {
    if (e.keyCode == 13) {
      e.preventDefault()
+     stopDisplayingLogin ()
      establishActionCableConnection()
      sendNameFetch()
      console.log(e)
    } 
  })
+}
+
+const stopDisplayingLogin = () => {
+  userLogInDiv().style.display = "none"
 }
 
 const nameBoxCreator = (data) => {
@@ -48,18 +56,24 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputDiv = document.createElement("div")
   const inputField = document.createElement('input')
   const inputLabel = document.createElement('label')
-
+  div.className = 'row'
+  div.setAttribute('id', 'showLogIn')
+  form.className = 'col s12'
+  formDiv.className = 'row'
+  inputDiv.className = 'input-field col s6'
   inputField.placeholder = "Enter Name"
   inputField.setAttribute("id", "user_name")
   inputField.setAttribute("name", "user[name]")
+  inputField.setAttribute('type', 'text')
   inputLabel.setAttribute("for", "user_name")
+  inputLabel.className = "active"
   inputLabel.innerText = "First Name"
   body().append(div)
   div.append(form)
   form.append(formDiv)
   formDiv.append(inputDiv)
-  inputDiv.append(inputLabel)
   inputDiv.append(inputField)
+  inputDiv.append(inputLabel)
   submitName()
 
 })
