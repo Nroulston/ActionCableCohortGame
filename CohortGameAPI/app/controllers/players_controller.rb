@@ -15,10 +15,13 @@ class PlayersController < ApplicationController
 
   # POST /players
   def create
-    @player = Player.new(player_params)
+    
+    room = GameRoom.find(1)
+    player = room.players.build(player_params)
 
-    if @player.save
-      render json: @player, status: :created, location: @player
+    if player.save
+      GameRoomChannel.server.broadcast('game_room_channel', {player: player.name})
+      # render json: @player, status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity
     end
@@ -46,6 +49,6 @@ class PlayersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def player_params
-      params.require(:player).permit(:GameRoom_id, :name)
+      params.require(:player).permit(:name)
     end
 end

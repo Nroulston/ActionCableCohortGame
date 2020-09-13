@@ -1,3 +1,3 @@
 class Player < ApplicationRecord
-  belongs_to :GameRoom
+  belongs_to :game_room
 end

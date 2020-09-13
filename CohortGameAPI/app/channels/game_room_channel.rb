@@ -7,7 +7,8 @@ class GameRoomChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def receive(data)
 
+  def receive(data)
+    console.log(data)
   end
 end

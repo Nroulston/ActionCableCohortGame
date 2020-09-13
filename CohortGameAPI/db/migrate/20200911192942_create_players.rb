@@ -2,7 +2,7 @@ class CreatePlayers < ActiveRecord::Migration[6.0]
   def change
     create_table :players do |t|
       t.string :name
-      t.belongs_to :GameRoom, null: false, foreign_key: true
+      t.integer :game_room_id
 
       t.timestamps
     end
