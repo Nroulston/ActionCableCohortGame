@@ -3,8 +3,10 @@ const API_ROOT = 'http://localhost:3000';
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 const HEADERS = {
   'Content-Type': 'application/json',
-  Accept: 'application/json',
+  'Accept' : 'application/json',
 };
+
+const nameBoxFlag = false
 
 import ActionCable from 'actioncable'
 const cable = ActionCable.createConsumer(API_WS_ROOT)
@@ -15,11 +17,19 @@ const submitName = () => {
    if (e.keyCode == 13) {
      e.preventDefault()
      establishActionCableConnection()
+     sendNameFetch()
      console.log(e)
+     
    } 
  })
 }
 
+const nameBoxCreator = () => {
+  if (nameBoxFlag) {
+    const nameBoxDiv = document.createElement('div')
+    
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
@@ -39,12 +49,24 @@ document.addEventListener("DOMContentLoaded", function() {
   formDiv.append(inputDiv)
   inputDiv.append(inputLabel)
   inputDiv.append(inputField)
-
   submitName()
 
 })
 
+function sendNameFetch() {
+  const strongParamsPlayer = {
+    player: {
+      name: inputForm().value
+    }
+  } 
 
+  fetch('http://127.0.0.1:3000/players', {
+    method: 'POST',
+    headers: HEADERS,
+    body: JSON.stringify(strongParamsPlayer)
+    }
+  )
+}
 function establishActionCableConnection() {
   cable.subscriptions.create('GameRoomChannel', {
     connected() {
@@ -56,7 +78,9 @@ function establishActionCableConnection() {
     },
 
     received(data) {
-      alert(data['message'])
+      let player = data
+      console.log(player)
     },
+    
   });
 }
