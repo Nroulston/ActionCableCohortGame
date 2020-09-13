@@ -6,7 +6,7 @@ const HEADERS = {
   'Accept' : 'application/json',
 };
 
-const nameBoxFlag = false
+
 
 import ActionCable from 'actioncable'
 const cable = ActionCable.createConsumer(API_WS_ROOT)
@@ -19,16 +19,26 @@ const submitName = () => {
      establishActionCableConnection()
      sendNameFetch()
      console.log(e)
-     
    } 
  })
 }
 
-const nameBoxCreator = () => {
-  if (nameBoxFlag) {
+const nameBoxCreator = (data) => {
     const nameBoxDiv = document.createElement('div')
-    
-  }
+    const div1InsideOfBoxDiv = document.createElement('div')
+    const div2InsideOfBoxDiv = document.createElement('div')
+    const nameBoxSpan = document.createElement('span')
+    nameBoxDiv.className = "row"
+    div1InsideOfBoxDiv.className = 'col s12 m5'
+    div2InsideOfBoxDiv.className = 'card-panel teal'
+    nameBoxSpan.className = 'white-text'
+    nameBoxSpan.innerText = data.player
+    body().append(nameBoxDiv)
+    nameBoxDiv.append(div1InsideOfBoxDiv)
+    div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
+    div2InsideOfBoxDiv.append(nameBoxSpan)
+
+
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -38,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputDiv = document.createElement("div")
   const inputField = document.createElement('input')
   const inputLabel = document.createElement('label')
+
   inputField.placeholder = "Enter Name"
   inputField.setAttribute("id", "user_name")
   inputField.setAttribute("name", "user[name]")
@@ -78,8 +89,7 @@ function establishActionCableConnection() {
     },
 
     received(data) {
-      let player = data
-      console.log(player)
+      nameBoxCreator(data)
     },
     
   });
