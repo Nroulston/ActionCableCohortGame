@@ -3,14 +3,14 @@ class PlayersController < ApplicationController
 
   # GET /players
   def index
-    @players = Player.all
-
-    render json: @players
+    players = Player.all
+  
+    render json: players
   end
 
   # GET /players/1
   def show
-    render json: @player
+    render json: player
   end
 
   # POST /players
@@ -20,8 +20,8 @@ class PlayersController < ApplicationController
     player = room.players.build(player_params)
 
     if player.save
-      GameRoomChannel.server.broadcast('game_room_channel', {player: player.name})
-      # render json: @player, status: :created, location: @player
+      ActionCable.server.broadcast('gameroom_channel', {name: player.name})
+      render json: @player, status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity
     end
@@ -44,7 +44,7 @@ class PlayersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_player
-      @player = Player.find(params[:id])
+      player = Player.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
