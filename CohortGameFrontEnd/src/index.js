@@ -1,27 +1,119 @@
-
 import ActionCable from 'actioncable'
+
+class Player {
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
+  }
+  
+  static createPlayers(playerData) {
+    playerData.forEach( player => {
+      allPlayer(Player.create(player.name, player.id))
+    })
+  }
+  
+  static create(id, name) {
+    debugger;
+    let player = new Player(id, name)
+    allPlayer.addPlayer(player);
+    return player
+  }
+  
+  static getPlayers() {
+    fetch('http://127.0.0.1:3000/players.json')
+    .then(response => response.json())
+    .then(json => { 
+      console.log(`this is the fetch ${json} data`)
+      json.forEach( player => {
+        nameBoxCreator(player)
+      Player.create(player.id, player.name)
+        
+        
+      })
+      sendNameFetch()
+    })
+    .catch((error) => {
+      console.error('error:', error)
+    })
+  }
+}
+    function nameBoxCreator(data) {
+        console.log('creating the player box')
+        const nameBoxDiv = document.createElement('div')
+        const div1InsideOfBoxDiv = document.createElement('div')
+        const div2InsideOfBoxDiv = document.createElement('div')
+        const nameBoxSpan = document.createElement('span')
+        nameBoxDiv.className = "row"
+        div2InsideOfBoxDiv.className = 'card-panel teal'
+        nameBoxSpan.className = 'white-text'
+        nameBoxSpan.innerText = data.name
+        column3div().append(nameBoxDiv)
+        nameBoxDiv.append(div1InsideOfBoxDiv)
+        div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
+        div2InsideOfBoxDiv.append(nameBoxSpan)
+    }
+class Game {
+  constructor(name, players) {
+    this.name = name;
+    this.name = players;
+  }
+  // Game indexOfCurrentTurnPLayer = null;
+  static whoseTurnIsIt() {
+asdf
+  }
+}
+
+class PressTheLetterFirstGame extends Game {
+  constructor(name, players) {
+    this.name = name
+    super(players)
+  }
+}
+
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
 
-//getters
 const cable = ActionCable.createConsumer(API_WS_ROOT)
+//getters
 const body = () => document.querySelector(".container")
 const userLogInDiv = () => document.querySelector('#showLogIn')
 const inputForm = () => document.querySelector("#user_name")
 const column9div = () => document.querySelector('#col9')
 const column3div = () => document.querySelector('#col3')
 
+const stopDisplayingLogin = () => {
+userLogInDiv().style.display = "none"
+}
+// the power of IIFE and closure all in one.
+// Gives us a constant that has persistent memory of the player array
+const allPlayer = (function() {
+  const playersArray = []
+  function addPlayerToAll(player) {
+    playersArray.push(player)
+  }
+
+  return {
+    addPlayer: function(player) {
+      addPlayerToAll(player)
+    },
+
+    value: function() {
+      return playersArray
+    }
+  }
+})();
+
 const enterGame = () => { 
  inputForm().addEventListener('keydown', function(e) {
    if (e.keyCode == 13) {
      e.preventDefault()
-     stopDisplayingLogin ()
+     stopDisplayingLogin()
      establishActionCableConnection()
      createLayout()
-     displayPlayersInGame()
+     Player.getPlayers()
      displayGameBoard()
    } 
  })
@@ -46,51 +138,24 @@ const displayGameBoard = () => {
   const ul = document.createElement('ul' )
   const titleLi = document.createElement('li')
   const gameLI  = document.createElement('li')
+  const gameCardDiv = document.createElement('div')
+  const cardDivContent = document.createElement('div')
+
   div.className = 'row'
   ul.className = 'collection with-header'
-  titleLi.className = 'collection-header'
+  titleLi.className = 'collection-header blue-grey'
   gameLI.className = 'collection-item'
+  gameCardDiv.className = 'card blue-grey'
+  cardDivContent.className = 'card-content white-text'
+  
   column9div().append(div)
   div.append(ul)
   ul.append(titleLi)
   ul.append(gameLI)
-
+  gameLI.append(gameCardDiv)
+  gameCardDiv.append(cardDivContent)
 }
 
-const displayPlayersInGame = function() {
-  fetch('http://127.0.0.1:3000/players.json')
-    .then(response => response.json())
-    .then(json => { 
-      console.log(`this is the fetch ${json} data`)
-      json.forEach( player => nameBoxCreator(player))
-      sendNameFetch()
-    })
-    .catch((error) => {
-      console.error('error:', error)
-    })
-}
-
-
-const stopDisplayingLogin = () => {
-  userLogInDiv().style.display = "none"
-}
-
-const nameBoxCreator = (data) => {
-    console.log('creating the player box')
-    const nameBoxDiv = document.createElement('div')
-    const div1InsideOfBoxDiv = document.createElement('div')
-    const div2InsideOfBoxDiv = document.createElement('div')
-    const nameBoxSpan = document.createElement('span')
-    nameBoxDiv.className = "row"
-    div1InsideOfBoxDiv.className = 'col s4 m5'
-    div2InsideOfBoxDiv.className = 'card-panel teal'
-    nameBoxSpan.className = 'white-text'
-    nameBoxSpan.innerText = data.name
-    column3div().append(nameBoxDiv)
-    nameBoxDiv.append(div1InsideOfBoxDiv)
-    div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
-    div2InsideOfBoxDiv.append(nameBoxSpan)
-}
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
@@ -154,3 +219,8 @@ function establishActionCableConnection() {
     
   });
 }
+
+
+
+
+
