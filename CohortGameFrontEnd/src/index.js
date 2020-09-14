@@ -1,52 +1,95 @@
 
-const API_ROOT = 'http://localhost:3000';
+import ActionCable from 'actioncable'
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
 
-
-
-import ActionCable from 'actioncable'
+//getters
 const cable = ActionCable.createConsumer(API_WS_ROOT)
-const body = () => document.querySelector("body")
+const body = () => document.querySelector(".container")
 const userLogInDiv = () => document.querySelector('#showLogIn')
-
-
 const inputForm = () => document.querySelector("#user_name")
-const submitName = () => { 
+const column9div = () => document.querySelector('#col9')
+const column3div = () => document.querySelector('#col3')
+
+const enterGame = () => { 
  inputForm().addEventListener('keydown', function(e) {
    if (e.keyCode == 13) {
      e.preventDefault()
      stopDisplayingLogin ()
      establishActionCableConnection()
-     sendNameFetch()
-     console.log(e)
+     createLayout()
+     displayPlayersInGame()
+     displayGameBoard()
    } 
  })
 }
+
+function createLayout() {
+  const rowDiv = document.createElement('div')
+  const col3Div = document.createElement('div')
+  const col9Div = document.createElement('div')
+  rowDiv.className = "row"
+  col3Div.className = "col s3"
+  col3Div.setAttribute('id', 'col3')
+  col9Div.className = "col s9"
+  col9Div.setAttribute('id', 'col9')
+  body().append(rowDiv)
+  rowDiv.append(col3Div)
+  rowDiv.append(col9Div)
+}
+
+const displayGameBoard = () => {
+  const div = document.createElement('div')
+  const ul = document.createElement('ul' )
+  const titleLi = document.createElement('li')
+  const gameLI  = document.createElement('li')
+  div.className = 'row'
+  ul.className = 'collection with-header'
+  titleLi.className = 'collection-header'
+  gameLI.className = 'collection-item'
+  column9div().append(div)
+  div.append(ul)
+  ul.append(titleLi)
+  ul.append(gameLI)
+
+}
+
+const displayPlayersInGame = function() {
+  fetch('http://127.0.0.1:3000/players.json')
+    .then(response => response.json())
+    .then(json => { 
+      console.log(`this is the fetch ${json} data`)
+      json.forEach( player => nameBoxCreator(player))
+      sendNameFetch()
+    })
+    .catch((error) => {
+      console.error('error:', error)
+    })
+}
+
 
 const stopDisplayingLogin = () => {
   userLogInDiv().style.display = "none"
 }
 
 const nameBoxCreator = (data) => {
+    console.log('creating the player box')
     const nameBoxDiv = document.createElement('div')
     const div1InsideOfBoxDiv = document.createElement('div')
     const div2InsideOfBoxDiv = document.createElement('div')
     const nameBoxSpan = document.createElement('span')
     nameBoxDiv.className = "row"
-    div1InsideOfBoxDiv.className = 'col s12 m5'
+    div1InsideOfBoxDiv.className = 'col s4 m5'
     div2InsideOfBoxDiv.className = 'card-panel teal'
     nameBoxSpan.className = 'white-text'
-    nameBoxSpan.innerText = data.player
-    body().append(nameBoxDiv)
+    nameBoxSpan.innerText = data.name
+    column3div().append(nameBoxDiv)
     nameBoxDiv.append(div1InsideOfBoxDiv)
     div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
     div2InsideOfBoxDiv.append(nameBoxSpan)
-
-
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -58,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputLabel = document.createElement('label')
   div.className = 'row'
   div.setAttribute('id', 'showLogIn')
-  form.className = 'col s12'
+  form.className = 'col s6'
   formDiv.className = 'row'
   inputDiv.className = 'input-field col s6'
   inputField.placeholder = "Enter Name"
@@ -74,7 +117,9 @@ document.addEventListener("DOMContentLoaded", function() {
   formDiv.append(inputDiv)
   inputDiv.append(inputField)
   inputDiv.append(inputLabel)
-  submitName()
+  enterGame()
+  
+
 
 })
 
@@ -103,6 +148,7 @@ function establishActionCableConnection() {
     },
 
     received(data) {
+      console.log(`This is the received data: ${data}`)
       nameBoxCreator(data)
     },
     
