@@ -5,13 +5,7 @@ class Player {
     this.id = id;
     this.name = name;
   }
-  
-  static createPlayers(playerData) {
-    playerData.forEach( player => {
-      allPlayer(Player.create(player.name, player.id))
-    })
-  }
-  
+
   static create(id, name) {
     debugger;
     let player = new Player(id, name)
@@ -23,12 +17,10 @@ class Player {
     fetch('http://127.0.0.1:3000/players.json')
     .then(response => response.json())
     .then(json => { 
-      console.log(`this is the fetch ${json} data`)
+      // console.log(`this is the fetch ${json} data`)
       json.forEach( player => {
         nameBoxCreator(player)
       Player.create(player.id, player.name)
-        
-        
       })
       sendNameFetch()
     })
@@ -37,33 +29,41 @@ class Player {
     })
   }
 }
-    function nameBoxCreator(data) {
-        console.log('creating the player box')
-        const nameBoxDiv = document.createElement('div')
-        const div1InsideOfBoxDiv = document.createElement('div')
-        const div2InsideOfBoxDiv = document.createElement('div')
-        const nameBoxSpan = document.createElement('span')
-        nameBoxDiv.className = "row"
-        div2InsideOfBoxDiv.className = 'card-panel teal'
-        nameBoxSpan.className = 'white-text'
-        nameBoxSpan.innerText = data.name
-        column3div().append(nameBoxDiv)
-        nameBoxDiv.append(div1InsideOfBoxDiv)
-        div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
-        div2InsideOfBoxDiv.append(nameBoxSpan)
-    }
-class Game {
-  constructor(name, players) {
+function nameBoxCreator(data) {
+    const nameBoxDiv = document.createElement('div')
+    const div1InsideOfBoxDiv = document.createElement('div')
+    const div2InsideOfBoxDiv = document.createElement('div')
+    const nameBoxSpan = document.createElement('span')
+    nameBoxDiv.className = "row"
+    div2InsideOfBoxDiv.className = 'card-panel teal'
+    nameBoxSpan.className = 'white-text'
+    nameBoxSpan.innerText = data.name
+    column3div().append(nameBoxDiv)
+    nameBoxDiv.append(div1InsideOfBoxDiv)
+    div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
+    div2InsideOfBoxDiv.append(nameBoxSpan)
+}
+class GameRoom {
+  constructor(name, players, turn=0) {
     this.name = name;
-    this.name = players;
+    this.players = players;
+    this.turn = turn
   }
-  // Game indexOfCurrentTurnPLayer = null;
-  static whoseTurnIsIt() {
-asdf
+  
+  incrementTurn() {
+    this.turn += 1
+    return this.turn
+  }
+  whoseTurnIsIt() {
+   let player = allPlayer.value()[0]
+   console.log(player) 
   }
 }
 
-class PressTheLetterFirstGame extends Game {
+class testGame extends GameRoom {
+
+}
+class PressTheLetterFirstGame extends GameRoom {
   constructor(name, players) {
     this.name = name
     super(players)
@@ -115,6 +115,10 @@ const enterGame = () => {
      createLayout()
      Player.getPlayers()
      displayGameBoard()
+     const game = new GameRoom("Default", allPlayer.value(), )
+     game.whoseTurnIsIt()
+     
+     
    } 
  })
 }
@@ -155,7 +159,6 @@ const displayGameBoard = () => {
   gameLI.append(gameCardDiv)
   gameCardDiv.append(cardDivContent)
 }
-
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
@@ -213,7 +216,7 @@ function establishActionCableConnection() {
     },
 
     received(data) {
-      console.log(`This is the received data: ${data}`)
+      // console.log(`This is the received data: ${data}`)
       nameBoxCreator(data)
     },
     
