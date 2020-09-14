@@ -1,4 +1,4 @@
-import ActionCable from 'actioncable'
+ import ActionCable from 'actioncable'
 
 class Player {
   constructor(id, name) {
@@ -7,7 +7,7 @@ class Player {
   }
 
   static create(id, name) {
-    debugger;
+   
     let player = new Player(id, name)
     allPlayer.addPlayer(player);
     return player
@@ -22,7 +22,7 @@ class Player {
         nameBoxCreator(player)
       Player.create(player.id, player.name)
       })
-      sendNameFetch()
+       sendNameFetch()
     })
     .catch((error) => {
       console.error('error:', error)
@@ -55,8 +55,14 @@ class GameRoom {
     return this.turn
   }
   whoseTurnIsIt() {
-   let player = allPlayer.value()[0]
-   console.log(player) 
+    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
+
+    // console.log(this.players[this.turn])
+    // console.log('test')
+    // console.log(this.players)
+  
+    //  console.log(allPlayer.currentPlayer(this.turn))
+  //  return allPlayer.currentPlayer(this.turn)
   }
 }
 
@@ -75,7 +81,7 @@ const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-
+ 
 const cable = ActionCable.createConsumer(API_WS_ROOT)
 //getters
 const body = () => document.querySelector(".container")
@@ -91,6 +97,7 @@ userLogInDiv().style.display = "none"
 // Gives us a constant that has persistent memory of the player array
 const allPlayer = (function() {
   const playersArray = []
+  const test = 1
   function addPlayerToAll(player) {
     playersArray.push(player)
   }
@@ -102,6 +109,14 @@ const allPlayer = (function() {
 
     value: function() {
       return playersArray
+    },
+
+    currentPlayer: function(index) {
+      let players = allPlayer.value()
+
+      const player = players[index]
+      
+      return player
     }
   }
 })();
@@ -111,11 +126,11 @@ const enterGame = () => {
    if (e.keyCode == 13) {
      e.preventDefault()
      stopDisplayingLogin()
-     establishActionCableConnection()
+      establishActionCableConnection()
      createLayout()
      Player.getPlayers()
      displayGameBoard()
-     const game = new GameRoom("Default", allPlayer.value(), )
+     const game = new GameRoom("Default", allPlayer.value())
      game.whoseTurnIsIt()
      
      
@@ -202,8 +217,11 @@ function sendNameFetch() {
     method: 'POST',
     headers: HEADERS,
     body: JSON.stringify(strongParamsPlayer)
-    }
-  )
+    })
+    .then(response => response.json())
+    .then(json => { 
+      Player.create(json.id, json.name)
+    })
 }
 function establishActionCableConnection() {
   cable.subscriptions.create('GameRoomChannel', {
