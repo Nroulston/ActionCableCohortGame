@@ -48,6 +48,7 @@ class GameRoom {
     this.name = name;
     this.players = players;
     this.turn = turn
+    this.player = undefined
   }
   
   incrementTurn() {
@@ -57,7 +58,7 @@ class GameRoom {
   whoseTurnIsIt() {
     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
 
-    // console.log(this.players[this.turn])
+    nameBoxCreator(this.players[0])
     // console.log('test')
     // console.log(this.players)
   
@@ -97,7 +98,6 @@ userLogInDiv().style.display = "none"
 // Gives us a constant that has persistent memory of the player array
 const allPlayer = (function() {
   const playersArray = []
-  const test = 1
   function addPlayerToAll(player) {
     playersArray.push(player)
   }
@@ -132,7 +132,7 @@ const enterGame = () => {
      displayGameBoard()
      const game = new GameRoom("Default", allPlayer.value())
      game.whoseTurnIsIt()
-     
+     //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
      
    } 
  })
@@ -230,7 +230,7 @@ function establishActionCableConnection() {
     },
 
     disconnected() {
-      // Called when the subscription has been terminated by the server
+      fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
     },
 
     received(data) {
