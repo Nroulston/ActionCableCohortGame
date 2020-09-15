@@ -6,33 +6,6 @@
  import Player from './player'
  import GameRoom from './gameRoom'
 
-
-// class GameRoom {
-//   constructor(name, players, turn=0) {
-//     this.name = name;
-//     this.players = players;
-//     this.turn = turn
-//     this.player = undefined
-//   }
-  
-//   incrementTurn() {
-//     this.turn += 1
-//     return this.turn
-//   }
-//   whoseTurnIsIt() {
-//     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-//     let players = allPlayer.value()
-  
-//     Player.nameBoxCreator(this.players[0])
-    
-//     console.log('test')
-//     console.log(this.players)
-    
-//      console.log(allPlayer.currentPlayer(this.turn))
-//    return allPlayer.currentPlayer(this.turn)
-//   }
-// }
-
 class testGame extends GameRoom {
 
 }
@@ -81,60 +54,6 @@ export const allPlayer = (function() {
     }
   }
 })();
-
-// const enterGame = () => { 
-//  inputForm().addEventListener('keydown', function(e) {
-//    if (e.keyCode == 13) {
-//       e.preventDefault()
-//       stopDisplayingLogin()
-//       establishActionCableConnection()
-//       createLayout()
-//       Player.getPlayers()
-//       displayGameBoard()
-//       
-//       const game = new GameRoom("Default", allPlayer.value())
-//       //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-      
-//    } 
-//  })
-// }
-
-// function createLayout() {
-//   const rowDiv = document.createElement('div')
-//   const col3Div = document.createElement('div')
-//   const col9Div = document.createElement('div')
-//   rowDiv.className = "row"
-//   col3Div.className = "col s3"
-//   col3Div.setAttribute('id', 'col3')
-//   col9Div.className = "col s9"
-//   col9Div.setAttribute('id', 'col9')
-//   body().append(rowDiv)
-//   rowDiv.append(col3Div)
-//   rowDiv.append(col9Div)
-// }
-
-// const displayGameBoard = () => {
-//   const div = document.createElement('div')
-//   const ul = document.createElement('ul' )
-//   const titleLi = document.createElement('li')
-//   const gameLI  = document.createElement('li')
-//   const gameCardDiv = document.createElement('div')
-//   const cardDivContent = document.createElement('div')
-
-//   div.className = 'row'
-//   ul.className = 'collection with-header'
-//   titleLi.className = 'collection-header blue-grey'
-//   gameLI.className = 'collection-item'
-//   gameCardDiv.className = 'card blue-grey'
-//   cardDivContent.className = 'card-content white-text'
-  
-//   column9div().append(div)
-//   div.append(ul)
-//   ul.append(titleLi)
-//   ul.append(gameLI)
-//   gameLI.append(gameCardDiv)
-//   gameCardDiv.append(cardDivContent)
-// }
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")

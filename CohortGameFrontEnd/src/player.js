@@ -54,10 +54,14 @@ class Player {
       .then(json => { 
        
         Player.create(json.id, json.name)
-        GameRoom.start(json)
+        GameRoom.startGames(json)
         
        
       })
+  }
+
+  static renderCurrentPlayer() {
+    debugger
   }
 
   static nameBoxCreator(data) {
@@ -66,7 +70,8 @@ class Player {
     const div2InsideOfBoxDiv = document.createElement('div')
     const nameBoxSpan = document.createElement('span')
     nameBoxDiv.className = "row"
-    div2InsideOfBoxDiv.className = 'card-panel teal'
+    div2InsideOfBoxDiv.className = `card-panel teal`
+    div2InsideOfBoxDiv.setAttribute("id", data.id)
     nameBoxSpan.className = 'white-text'
     nameBoxSpan.innerText = data.name
     column3div().append(nameBoxDiv)

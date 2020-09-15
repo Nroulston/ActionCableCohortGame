@@ -6,14 +6,18 @@ class GameRoom {
     this.name = name;
     this.turn = turn
     this.id = id
-    this.player = undefined
+    this.currentPlayer = undefined
 
   }
-  static startGame(json) {
-    gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id )
-    gameRoomInstance.whoseTurnIsIt()
+  static startGames(json) {
+    gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
+    GameRoom.displayGameBoard()
+    gameRoomInstance.setWhoseTurnItIs()
     
+    // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
+    // when submitting make sure to update back to index zero if you are at the length of the current player array.
   }
+
   static enterGame() { 
     inputForm().addEventListener('keydown', function(e) {
       if (e.keyCode == 13) {
@@ -22,16 +26,10 @@ class GameRoom {
          GameRoom.establishActionCableConnection()
          GameRoom.createLayout()
          Player.getPlayers()
-         GameRoom.displayGameBoard()
-      
-         //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-         // turns out that async functions allow so much code to pass that allPlayer isn't assigned at the time of console.logging the next steps.
          
       } 
     })
    }
-
-   
 
    static createLayout() {
     const rowDiv = document.createElement('div')
@@ -70,7 +68,8 @@ class GameRoom {
     gameCardDiv.append(cardDivContent)
 
   }
-   static stopDisplayingLogin() {
+
+  static stopDisplayingLogin() {
     userLogInDiv().style.display = "none"
     }
 
@@ -97,18 +96,10 @@ class GameRoom {
     this.turn += 1
     return this.turn
   }
-  whoseTurnIsIt() {
-    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-    // the errors are potentially due to the speed of async functions and the rest.
-    let players = allPlayer.value()
-  
-    Player.nameBoxCreator(this.players[0])
-    
-    console.log('test')
-    console.log(this.players)
-    
-     console.log(allPlayer.currentPlayer(this.turn))
-   return allPlayer.currentPlayer(this.turn)
+
+  setWhoseTurnItIs() {
+    this.currentPlayer = allPlayer.currentPlayer(this.turn)
+    Player.renderCurrentPlayer()
   }
 }
 

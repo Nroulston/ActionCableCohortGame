@@ -719,19 +719,24 @@ var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 // CONCATENATED MODULE: ./src/gameRoom.js
 
 
+let gameRoomInstance = undefined
 class gameRoom_GameRoom {
-  constructor(name, players, id, turn=0) {
+  constructor(name,  id, turn=0) {
     this.name = name;
-    this.players = players;
     this.turn = turn
     this.id = id
-    this.player = undefined
+    this.currentPlayer = undefined
 
   }
-  static start(json) {
-    const gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, allPlayer.value(), json.game_room_id )
-    debugger
+  static startGames(json) {
+    gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
+    gameRoom_GameRoom.displayGameBoard()
+    gameRoomInstance.setWhoseTurnItIs()
+    
+    // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
+    // when submitting make sure to update back to index zero if you are at the length of the current player array.
   }
+
   static enterGame() { 
     inputForm().addEventListener('keydown', function(e) {
       if (e.keyCode == 13) {
@@ -740,21 +745,10 @@ class gameRoom_GameRoom {
          gameRoom_GameRoom.establishActionCableConnection()
          gameRoom_GameRoom.createLayout()
          src_player.getPlayers()
-         gameRoom_GameRoom.displayGameBoard()
-         
-        //  const game = new GameRoom("Default", allPlayer.value())
-        //  allPlayer
-         // potentially assign the allPlayer input as a constant that invokes the function call when it is run and return the .value()
-         
-      
-         //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-         // turns out that async functions allow so much code to pass that allPlayer isn't assigned at the time of console.logging the next steps.
          
       } 
     })
    }
-
-   
 
    static createLayout() {
     const rowDiv = document.createElement('div')
@@ -793,7 +787,8 @@ class gameRoom_GameRoom {
     gameCardDiv.append(cardDivContent)
 
   }
-   static stopDisplayingLogin() {
+
+  static stopDisplayingLogin() {
     userLogInDiv().style.display = "none"
     }
 
@@ -820,18 +815,10 @@ class gameRoom_GameRoom {
     this.turn += 1
     return this.turn
   }
-  whoseTurnIsIt() {
-    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-    // the errors are potentially due to the speed of async functions and the rest.
-    let players = allPlayer.value()
-  
-    src_player.nameBoxCreator(this.players[0])
-    
-    console.log('test')
-    console.log(this.players)
-    
-     console.log(allPlayer.currentPlayer(this.turn))
-   return allPlayer.currentPlayer(this.turn)
+
+  setWhoseTurnItIs() {
+    this.currentPlayer = allPlayer.currentPlayer(this.turn)
+    src_player.renderCurrentPlayer()
   }
 }
 
@@ -843,7 +830,7 @@ const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-
+let game = undefined
 class player_Player {
   constructor(id, name) {
     this.id = id;
@@ -865,6 +852,7 @@ class player_Player {
     .then(json => { 
       // console.log(`this is the fetch ${json} data`)
       json.forEach( player => {
+       console.log(player)
         player_Player.nameBoxCreator(player)
         player_Player.create(player.id, player.name)
       })
@@ -892,10 +880,14 @@ class player_Player {
       .then(json => { 
        
         player_Player.create(json.id, json.name)
-        gameRoom.start(json)
+        gameRoom.startGames(json)
         
        
       })
+  }
+
+  static renderCurrentPlayer() {
+    debugger
   }
 
   static nameBoxCreator(data) {
@@ -904,7 +896,8 @@ class player_Player {
     const div2InsideOfBoxDiv = document.createElement('div')
     const nameBoxSpan = document.createElement('span')
     nameBoxDiv.className = "row"
-    div2InsideOfBoxDiv.className = 'card-panel teal'
+    div2InsideOfBoxDiv.className = `card-panel teal`
+    div2InsideOfBoxDiv.setAttribute("id", data.id)
     nameBoxSpan.className = 'white-text'
     nameBoxSpan.innerText = data.name
     column3div().append(nameBoxDiv)
@@ -923,33 +916,6 @@ class player_Player {
  
  
  
-
-
-// class GameRoom {
-//   constructor(name, players, turn=0) {
-//     this.name = name;
-//     this.players = players;
-//     this.turn = turn
-//     this.player = undefined
-//   }
-  
-//   incrementTurn() {
-//     this.turn += 1
-//     return this.turn
-//   }
-//   whoseTurnIsIt() {
-//     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-//     let players = allPlayer.value()
-  
-//     Player.nameBoxCreator(this.players[0])
-    
-//     console.log('test')
-//     console.log(this.players)
-    
-//      console.log(allPlayer.currentPlayer(this.turn))
-//    return allPlayer.currentPlayer(this.turn)
-//   }
-// }
 
 class src_testGame extends gameRoom {
 
@@ -999,60 +965,6 @@ const allPlayer = (function() {
     }
   }
 })();
-
-// const enterGame = () => { 
-//  inputForm().addEventListener('keydown', function(e) {
-//    if (e.keyCode == 13) {
-//       e.preventDefault()
-//       stopDisplayingLogin()
-//       establishActionCableConnection()
-//       createLayout()
-//       Player.getPlayers()
-//       displayGameBoard()
-//       
-//       const game = new GameRoom("Default", allPlayer.value())
-//       //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-      
-//    } 
-//  })
-// }
-
-// function createLayout() {
-//   const rowDiv = document.createElement('div')
-//   const col3Div = document.createElement('div')
-//   const col9Div = document.createElement('div')
-//   rowDiv.className = "row"
-//   col3Div.className = "col s3"
-//   col3Div.setAttribute('id', 'col3')
-//   col9Div.className = "col s9"
-//   col9Div.setAttribute('id', 'col9')
-//   body().append(rowDiv)
-//   rowDiv.append(col3Div)
-//   rowDiv.append(col9Div)
-// }
-
-// const displayGameBoard = () => {
-//   const div = document.createElement('div')
-//   const ul = document.createElement('ul' )
-//   const titleLi = document.createElement('li')
-//   const gameLI  = document.createElement('li')
-//   const gameCardDiv = document.createElement('div')
-//   const cardDivContent = document.createElement('div')
-
-//   div.className = 'row'
-//   ul.className = 'collection with-header'
-//   titleLi.className = 'collection-header blue-grey'
-//   gameLI.className = 'collection-item'
-//   gameCardDiv.className = 'card blue-grey'
-//   cardDivContent.className = 'card-content white-text'
-  
-//   column9div().append(div)
-//   div.append(ul)
-//   ul.append(titleLi)
-//   ul.append(gameLI)
-//   gameLI.append(gameCardDiv)
-//   gameCardDiv.append(cardDivContent)
-// }
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
