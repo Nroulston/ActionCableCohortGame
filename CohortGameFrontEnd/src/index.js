@@ -1,31 +1,37 @@
+// Todo figure out why when first accessing the site starts the actioncable process, on reload it doesn't.
+
+// Todo figure out how to write async functions inside the class and make it a class method.
+
  import ActionCable from 'actioncable'
  import Player from './player'
+ import GameRoom from './gameRoom'
 
 
-
-class GameRoom {
-  constructor(name, players, turn=0) {
-    this.name = name;
-    this.players = players;
-    this.turn = turn
-    this.player = undefined
-  }
+// class GameRoom {
+//   constructor(name, players, turn=0) {
+//     this.name = name;
+//     this.players = players;
+//     this.turn = turn
+//     this.player = undefined
+//   }
   
-  incrementTurn() {
-    this.turn += 1
-    return this.turn
-  }
-  whoseTurnIsIt() {
-    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-
-    Player.nameBoxCreator(this.players[0])
-    console.log('test')
-    console.log(this.players)
+//   incrementTurn() {
+//     this.turn += 1
+//     return this.turn
+//   }
+//   whoseTurnIsIt() {
+//     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
+//     let players = allPlayer.value()
   
-     console.log(allPlayer.currentPlayer(this.turn))
-   return allPlayer.currentPlayer(this.turn)
-  }
-}
+//     Player.nameBoxCreator(this.players[0])
+    
+//     console.log('test')
+//     console.log(this.players)
+    
+//      console.log(allPlayer.currentPlayer(this.turn))
+//    return allPlayer.currentPlayer(this.turn)
+//   }
+// }
 
 class testGame extends GameRoom {
 
@@ -38,22 +44,17 @@ class PressTheLetterFirstGame extends GameRoom {
 }
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
-const HEADERS = {
-  'Content-Type': 'application/json',
-  'Accept' : 'application/json',
-};
+
  
-const cable = ActionCable.createConsumer(API_WS_ROOT)
+export const cable = ActionCable.createConsumer(API_WS_ROOT)
 // //getters
-const body = () => document.querySelector(".container")
-const userLogInDiv = () => document.querySelector('#showLogIn')
+export const body = () => document.querySelector(".container")
+export const userLogInDiv = () => document.querySelector('#showLogIn')
 export const inputForm = () => document.querySelector("#user_name")
-const column9div = () => document.querySelector('#col9')
+export const column9div = () => document.querySelector('#col9')
 export const column3div = () => document.querySelector('#col3')
 
-const stopDisplayingLogin = () => {
-userLogInDiv().style.display = "none"
-}
+
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array
 export const allPlayer = (function() {
@@ -81,59 +82,59 @@ export const allPlayer = (function() {
   }
 })();
 
-const enterGame = () => { 
- inputForm().addEventListener('keydown', function(e) {
-   if (e.keyCode == 13) {
-      e.preventDefault()
-      stopDisplayingLogin()
-      establishActionCableConnection()
-      createLayout()
-      Player.getPlayers()
-      displayGameBoard()
-      const game = new GameRoom("Default", allPlayer.value())
-      // game.whoseTurnIsIt()
-      //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-     
-   } 
- })
-}
+// const enterGame = () => { 
+//  inputForm().addEventListener('keydown', function(e) {
+//    if (e.keyCode == 13) {
+//       e.preventDefault()
+//       stopDisplayingLogin()
+//       establishActionCableConnection()
+//       createLayout()
+//       Player.getPlayers()
+//       displayGameBoard()
+//       
+//       const game = new GameRoom("Default", allPlayer.value())
+//       //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
+      
+//    } 
+//  })
+// }
 
-function createLayout() {
-  const rowDiv = document.createElement('div')
-  const col3Div = document.createElement('div')
-  const col9Div = document.createElement('div')
-  rowDiv.className = "row"
-  col3Div.className = "col s3"
-  col3Div.setAttribute('id', 'col3')
-  col9Div.className = "col s9"
-  col9Div.setAttribute('id', 'col9')
-  body().append(rowDiv)
-  rowDiv.append(col3Div)
-  rowDiv.append(col9Div)
-}
+// function createLayout() {
+//   const rowDiv = document.createElement('div')
+//   const col3Div = document.createElement('div')
+//   const col9Div = document.createElement('div')
+//   rowDiv.className = "row"
+//   col3Div.className = "col s3"
+//   col3Div.setAttribute('id', 'col3')
+//   col9Div.className = "col s9"
+//   col9Div.setAttribute('id', 'col9')
+//   body().append(rowDiv)
+//   rowDiv.append(col3Div)
+//   rowDiv.append(col9Div)
+// }
 
-const displayGameBoard = () => {
-  const div = document.createElement('div')
-  const ul = document.createElement('ul' )
-  const titleLi = document.createElement('li')
-  const gameLI  = document.createElement('li')
-  const gameCardDiv = document.createElement('div')
-  const cardDivContent = document.createElement('div')
+// const displayGameBoard = () => {
+//   const div = document.createElement('div')
+//   const ul = document.createElement('ul' )
+//   const titleLi = document.createElement('li')
+//   const gameLI  = document.createElement('li')
+//   const gameCardDiv = document.createElement('div')
+//   const cardDivContent = document.createElement('div')
 
-  div.className = 'row'
-  ul.className = 'collection with-header'
-  titleLi.className = 'collection-header blue-grey'
-  gameLI.className = 'collection-item'
-  gameCardDiv.className = 'card blue-grey'
-  cardDivContent.className = 'card-content white-text'
+//   div.className = 'row'
+//   ul.className = 'collection with-header'
+//   titleLi.className = 'collection-header blue-grey'
+//   gameLI.className = 'collection-item'
+//   gameCardDiv.className = 'card blue-grey'
+//   cardDivContent.className = 'card-content white-text'
   
-  column9div().append(div)
-  div.append(ul)
-  ul.append(titleLi)
-  ul.append(gameLI)
-  gameLI.append(gameCardDiv)
-  gameCardDiv.append(cardDivContent)
-}
+//   column9div().append(div)
+//   div.append(ul)
+//   ul.append(titleLi)
+//   ul.append(gameLI)
+//   gameLI.append(gameCardDiv)
+//   gameCardDiv.append(cardDivContent)
+// }
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
@@ -160,27 +161,29 @@ document.addEventListener("DOMContentLoaded", function() {
   formDiv.append(inputDiv)
   inputDiv.append(inputField)
   inputDiv.append(inputLabel)
-  enterGame()
+  GameRoom.enterGame()
+  
 })
 
 
-function establishActionCableConnection() {
-  cable.subscriptions.create('GameRoomChannel', {
-    connected() {
-      console.log("connected to the room")
-    },
 
-    disconnected() {
-      // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
-    },
+// function establishActionCableConnection() {
+//   cable.subscriptions.create('GameRoomChannel', {
+//     connected() {
+//       console.log("connected to the room")
+//     },
 
-    received(data) {
-      // console.log(`This is the received data: ${data}`)
-      Player.nameBoxCreator(data)
-    },
+//     disconnected() {
+//       // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+//     },
+
+//     received(data) {
+//       // console.log(`This is the received data: ${data}`)
+//       Player.nameBoxCreator(data)
+//     },
     
-  });
-}
+//   });
+// }
 
 
 

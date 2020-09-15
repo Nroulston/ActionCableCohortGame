@@ -704,7 +704,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function() {
 __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
+__webpack_require__.d(__webpack_exports__, "cable", function() { return /* binding */ cable; });
+__webpack_require__.d(__webpack_exports__, "body", function() { return /* binding */ body; });
+__webpack_require__.d(__webpack_exports__, "userLogInDiv", function() { return /* binding */ userLogInDiv; });
 __webpack_require__.d(__webpack_exports__, "inputForm", function() { return /* binding */ inputForm; });
+__webpack_require__.d(__webpack_exports__, "column9div", function() { return /* binding */ column9div; });
 __webpack_require__.d(__webpack_exports__, "column3div", function() { return /* binding */ column3div; });
 __webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* binding */ allPlayer; });
 
@@ -712,7 +716,128 @@ __webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* b
 var action_cable = __webpack_require__(0);
 var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
+// CONCATENATED MODULE: ./src/gameRoom.js
+
+
+class gameRoom_GameRoom {
+  constructor(name, players, id, turn=0) {
+    this.name = name;
+    this.players = players;
+    this.turn = turn
+    this.id = id
+    this.player = undefined
+
+  }
+  static start(json) {
+    const gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, allPlayer.value(), json.game_room_id )
+    debugger
+  }
+  static enterGame() { 
+    inputForm().addEventListener('keydown', function(e) {
+      if (e.keyCode == 13) {
+         e.preventDefault()
+         gameRoom_GameRoom.stopDisplayingLogin()
+         gameRoom_GameRoom.establishActionCableConnection()
+         gameRoom_GameRoom.createLayout()
+         src_player.getPlayers()
+         gameRoom_GameRoom.displayGameBoard()
+         
+        //  const game = new GameRoom("Default", allPlayer.value())
+        //  allPlayer
+         // potentially assign the allPlayer input as a constant that invokes the function call when it is run and return the .value()
+         
+      
+         //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
+         // turns out that async functions allow so much code to pass that allPlayer isn't assigned at the time of console.logging the next steps.
+         
+      } 
+    })
+   }
+
+   
+
+   static createLayout() {
+    const rowDiv = document.createElement('div')
+    const col3Div = document.createElement('div')
+    const col9Div = document.createElement('div')
+    rowDiv.className = "row"
+    col3Div.className = "col s3"
+    col3Div.setAttribute('id', 'col3')
+    col9Div.className = "col s9"
+    col9Div.setAttribute('id', 'col9')
+    body().append(rowDiv)
+    rowDiv.append(col3Div)
+    rowDiv.append(col9Div)
+  }
+  
+  static displayGameBoard() {
+    const div = document.createElement('div')
+    const ul = document.createElement('ul' )
+    const titleLi = document.createElement('li')
+    const gameLI  = document.createElement('li')
+    const gameCardDiv = document.createElement('div')
+    const cardDivContent = document.createElement('div')
+  
+    div.className = 'row'
+    ul.className = 'collection with-header'
+    titleLi.className = 'collection-header blue-grey'
+    gameLI.className = 'collection-item'
+    gameCardDiv.className = 'card blue-grey'
+    cardDivContent.className = 'card-content white-text'
+    
+    column9div().append(div)
+    div.append(ul)
+    ul.append(titleLi)
+    ul.append(gameLI)
+    gameLI.append(gameCardDiv)
+    gameCardDiv.append(cardDivContent)
+
+  }
+   static stopDisplayingLogin() {
+    userLogInDiv().style.display = "none"
+    }
+
+  static establishActionCableConnection() {
+    cable.subscriptions.create('GameRoomChannel', {
+      connected() {
+        console.log("connected to the room")
+      },
+  
+      disconnected() {
+        // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+      },
+  
+      received(data) {
+        // console.log(`This is the received data: ${data}`)
+        src_player.nameBoxCreator(data)
+      },
+      
+    });
+  }
+    
+  
+  incrementTurn() {
+    this.turn += 1
+    return this.turn
+  }
+  whoseTurnIsIt() {
+    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
+    // the errors are potentially due to the speed of async functions and the rest.
+    let players = allPlayer.value()
+  
+    src_player.nameBoxCreator(this.players[0])
+    
+    console.log('test')
+    console.log(this.players)
+    
+     console.log(allPlayer.currentPlayer(this.turn))
+   return allPlayer.currentPlayer(this.turn)
+  }
+}
+
+/* harmony default export */ var gameRoom = (gameRoom_GameRoom);
 // CONCATENATED MODULE: ./src/player.js
+
 
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -728,7 +853,9 @@ class player_Player {
   static create(id, name) {
    
     let player = new player_Player(id, name)
+    
     allPlayer.addPlayer(player);
+    
     return player
   }
   
@@ -738,7 +865,6 @@ class player_Player {
     .then(json => { 
       // console.log(`this is the fetch ${json} data`)
       json.forEach( player => {
-       console.log(player)
         player_Player.nameBoxCreator(player)
         player_Player.create(player.id, player.name)
       })
@@ -750,6 +876,7 @@ class player_Player {
   }
   
   static sendNameFetch() {
+    
     const strongParamsPlayer = {
       player: {
         name: inputForm().value
@@ -763,7 +890,11 @@ class player_Player {
       })
       .then(response => response.json())
       .then(json => { 
+       
         player_Player.create(json.id, json.name)
+        gameRoom.start(json)
+        
+       
       })
   }
 
@@ -785,39 +916,45 @@ class player_Player {
 
 /* harmony default export */ var src_player = (player_Player);
 // CONCATENATED MODULE: ./src/index.js
+// Todo figure out why when first accessing the site starts the actioncable process, on reload it doesn't.
+
+// Todo figure out how to write async functions inside the class and make it a class method.
+
  
  
+ 
 
 
-
-class src_GameRoom {
-  constructor(name, players, turn=0) {
-    this.name = name;
-    this.players = players;
-    this.turn = turn
-    this.player = undefined
-  }
+// class GameRoom {
+//   constructor(name, players, turn=0) {
+//     this.name = name;
+//     this.players = players;
+//     this.turn = turn
+//     this.player = undefined
+//   }
   
-  incrementTurn() {
-    this.turn += 1
-    return this.turn
-  }
-  whoseTurnIsIt() {
+//   incrementTurn() {
+//     this.turn += 1
+//     return this.turn
+//   }
+//   whoseTurnIsIt() {
 //     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
-
-    src_player.nameBoxCreator(this.players[0])
-    console.log('test')
-    console.log(this.players)
+//     let players = allPlayer.value()
   
-     console.log(allPlayer.currentPlayer(this.turn))
-   return allPlayer.currentPlayer(this.turn)
-  }
-}
+//     Player.nameBoxCreator(this.players[0])
+    
+//     console.log('test')
+//     console.log(this.players)
+    
+//      console.log(allPlayer.currentPlayer(this.turn))
+//    return allPlayer.currentPlayer(this.turn)
+//   }
+// }
 
-class testGame extends src_GameRoom {
+class src_testGame extends gameRoom {
 
 }
-class PressTheLetterFirstGame extends src_GameRoom {
+class src_PressTheLetterFirstGame extends gameRoom {
   constructor(name, players) {
     this.name = name
     super(players)
@@ -825,10 +962,7 @@ class PressTheLetterFirstGame extends src_GameRoom {
 }
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
-const src_HEADERS = {
-  'Content-Type': 'application/json',
-  'Accept' : 'application/json',
-};
+
  
 const cable = action_cable_default.a.createConsumer(API_WS_ROOT)
 // //getters
@@ -838,9 +972,7 @@ const inputForm = () => document.querySelector("#user_name")
 const column9div = () => document.querySelector('#col9')
 const column3div = () => document.querySelector('#col3')
 
-const stopDisplayingLogin = () => {
-userLogInDiv().style.display = "none"
-}
+
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array
 const allPlayer = (function() {
@@ -868,59 +1000,59 @@ const allPlayer = (function() {
   }
 })();
 
-const enterGame = () => { 
- inputForm().addEventListener('keydown', function(e) {
-   if (e.keyCode == 13) {
-      e.preventDefault()
-      stopDisplayingLogin()
-      establishActionCableConnection()
-      createLayout()
-      src_player.getPlayers()
-      displayGameBoard()
-      const game = new src_GameRoom("Default", allPlayer.value())
-      // game.whoseTurnIsIt()
-      //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
-     
-   } 
- })
-}
+// const enterGame = () => { 
+//  inputForm().addEventListener('keydown', function(e) {
+//    if (e.keyCode == 13) {
+//       e.preventDefault()
+//       stopDisplayingLogin()
+//       establishActionCableConnection()
+//       createLayout()
+//       Player.getPlayers()
+//       displayGameBoard()
+//       
+//       const game = new GameRoom("Default", allPlayer.value())
+//       //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
+      
+//    } 
+//  })
+// }
 
-function createLayout() {
-  const rowDiv = document.createElement('div')
-  const col3Div = document.createElement('div')
-  const col9Div = document.createElement('div')
-  rowDiv.className = "row"
-  col3Div.className = "col s3"
-  col3Div.setAttribute('id', 'col3')
-  col9Div.className = "col s9"
-  col9Div.setAttribute('id', 'col9')
-  body().append(rowDiv)
-  rowDiv.append(col3Div)
-  rowDiv.append(col9Div)
-}
+// function createLayout() {
+//   const rowDiv = document.createElement('div')
+//   const col3Div = document.createElement('div')
+//   const col9Div = document.createElement('div')
+//   rowDiv.className = "row"
+//   col3Div.className = "col s3"
+//   col3Div.setAttribute('id', 'col3')
+//   col9Div.className = "col s9"
+//   col9Div.setAttribute('id', 'col9')
+//   body().append(rowDiv)
+//   rowDiv.append(col3Div)
+//   rowDiv.append(col9Div)
+// }
 
-const displayGameBoard = () => {
-  const div = document.createElement('div')
-  const ul = document.createElement('ul' )
-  const titleLi = document.createElement('li')
-  const gameLI  = document.createElement('li')
-  const gameCardDiv = document.createElement('div')
-  const cardDivContent = document.createElement('div')
+// const displayGameBoard = () => {
+//   const div = document.createElement('div')
+//   const ul = document.createElement('ul' )
+//   const titleLi = document.createElement('li')
+//   const gameLI  = document.createElement('li')
+//   const gameCardDiv = document.createElement('div')
+//   const cardDivContent = document.createElement('div')
 
-  div.className = 'row'
-  ul.className = 'collection with-header'
-  titleLi.className = 'collection-header blue-grey'
-  gameLI.className = 'collection-item'
-  gameCardDiv.className = 'card blue-grey'
-  cardDivContent.className = 'card-content white-text'
+//   div.className = 'row'
+//   ul.className = 'collection with-header'
+//   titleLi.className = 'collection-header blue-grey'
+//   gameLI.className = 'collection-item'
+//   gameCardDiv.className = 'card blue-grey'
+//   cardDivContent.className = 'card-content white-text'
   
-  column9div().append(div)
-  div.append(ul)
-  ul.append(titleLi)
-  ul.append(gameLI)
-  gameLI.append(gameCardDiv)
-  gameCardDiv.append(cardDivContent)
-}
+//   column9div().append(div)
+//   div.append(ul)
+//   ul.append(titleLi)
+//   ul.append(gameLI)
+//   gameLI.append(gameCardDiv)
+//   gameCardDiv.append(cardDivContent)
+// }
 
 document.addEventListener("DOMContentLoaded", function() {
   const div = document.createElement("div")
@@ -947,27 +1079,29 @@ document.addEventListener("DOMContentLoaded", function() {
   formDiv.append(inputDiv)
   inputDiv.append(inputField)
   inputDiv.append(inputLabel)
-  enterGame()
+  gameRoom.enterGame()
+  
 })
 
 
-function establishActionCableConnection() {
-  cable.subscriptions.create('GameRoomChannel', {
-    connected() {
-      console.log("connected to the room")
-    },
 
-    disconnected() {
-      // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
-    },
+// function establishActionCableConnection() {
+//   cable.subscriptions.create('GameRoomChannel', {
+//     connected() {
+//       console.log("connected to the room")
+//     },
 
-    received(data) {
-      // console.log(`This is the received data: ${data}`)
-      src_player.nameBoxCreator(data)
-    },
+//     disconnected() {
+//       // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+//     },
+
+//     received(data) {
+//       // console.log(`This is the received data: ${data}`)
+//       Player.nameBoxCreator(data)
+//     },
     
-  });
-}
+//   });
+// }
 
 
 

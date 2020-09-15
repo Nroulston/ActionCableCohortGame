@@ -1,9 +1,10 @@
 import {column3div, allPlayer, inputForm} from './index'
+import GameRoom from './gameRoom'
 const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-
+export let game = undefined
 class Player {
   constructor(id, name) {
     this.id = id;
@@ -13,7 +14,9 @@ class Player {
   static create(id, name) {
    
     let player = new Player(id, name)
+    
     allPlayer.addPlayer(player);
+    
     return player
   }
   
@@ -35,6 +38,7 @@ class Player {
   }
   
   static sendNameFetch() {
+    
     const strongParamsPlayer = {
       player: {
         name: inputForm().value
@@ -48,7 +52,11 @@ class Player {
       })
       .then(response => response.json())
       .then(json => { 
+       
         Player.create(json.id, json.name)
+        GameRoom.start(json)
+        
+       
       })
   }
 
