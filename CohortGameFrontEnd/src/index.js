@@ -17,8 +17,6 @@ class PressTheLetterFirstGame extends GameRoom {
 }
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
-
- 
 export const cable = ActionCable.createConsumer(API_WS_ROOT)
 // //getters
 export const body = () => document.querySelector(".container")
@@ -26,7 +24,8 @@ export const userLogInDiv = () => document.querySelector('#showLogIn')
 export const inputForm = () => document.querySelector("#user_name")
 export const column9div = () => document.querySelector('#col9')
 export const column3div = () => document.querySelector('#col3')
-
+export const gameBoard = () => document.querySelector('#col9 > div > ul')
+export const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array
@@ -85,24 +84,6 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 
-
-// function establishActionCableConnection() {
-//   cable.subscriptions.create('GameRoomChannel', {
-//     connected() {
-//       console.log("connected to the room")
-//     },
-
-//     disconnected() {
-//       // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
-//     },
-
-//     received(data) {
-//       // console.log(`This is the received data: ${data}`)
-//       Player.nameBoxCreator(data)
-//     },
-    
-//   });
-// }
 
 
 

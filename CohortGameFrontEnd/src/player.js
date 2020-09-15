@@ -1,4 +1,4 @@
-import {column3div, allPlayer, inputForm} from './index'
+import {column3div, allPlayer, inputForm, currentPlayerLI} from './index'
 import GameRoom from './gameRoom'
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -61,7 +61,9 @@ class Player {
   }
 
   static renderCurrentPlayer() {
-    debugger
+    
+    currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentPlayer.name}'s turn`
+
   }
 
   static nameBoxCreator(data) {

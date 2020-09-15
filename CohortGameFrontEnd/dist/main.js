@@ -710,6 +710,8 @@ __webpack_require__.d(__webpack_exports__, "userLogInDiv", function() { return /
 __webpack_require__.d(__webpack_exports__, "inputForm", function() { return /* binding */ inputForm; });
 __webpack_require__.d(__webpack_exports__, "column9div", function() { return /* binding */ column9div; });
 __webpack_require__.d(__webpack_exports__, "column3div", function() { return /* binding */ column3div; });
+__webpack_require__.d(__webpack_exports__, "gameBoard", function() { return /* binding */ gameBoard; });
+__webpack_require__.d(__webpack_exports__, "currentPlayerLI", function() { return /* binding */ currentPlayerLI; });
 __webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* binding */ allPlayer; });
 
 // EXTERNAL MODULE: ./node_modules/actioncable/lib/assets/compiled/action_cable.js
@@ -771,13 +773,16 @@ class gameRoom_GameRoom {
     const gameLI  = document.createElement('li')
     const gameCardDiv = document.createElement('div')
     const cardDivContent = document.createElement('div')
+    const currentPlayerLi = document.createElement('li')
   
     div.className = 'row'
     ul.className = 'collection with-header'
     titleLi.className = 'collection-header blue-grey'
     gameLI.className = 'collection-item'
+    currentPlayerLi.className = 'collection-item'
     gameCardDiv.className = 'card blue-grey'
     cardDivContent.className = 'card-content white-text'
+    
     
     column9div().append(div)
     div.append(ul)
@@ -785,6 +790,7 @@ class gameRoom_GameRoom {
     ul.append(gameLI)
     gameLI.append(gameCardDiv)
     gameCardDiv.append(cardDivContent)
+    ul.append(currentPlayerLi)
 
   }
 
@@ -928,8 +934,6 @@ class src_PressTheLetterFirstGame extends gameRoom {
 }
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
-
- 
 const cable = action_cable_default.a.createConsumer(API_WS_ROOT)
 // //getters
 const body = () => document.querySelector(".container")
@@ -937,7 +941,8 @@ const userLogInDiv = () => document.querySelector('#showLogIn')
 const inputForm = () => document.querySelector("#user_name")
 const column9div = () => document.querySelector('#col9')
 const column3div = () => document.querySelector('#col3')
-
+const gameBoard = () => document.querySelector('#col9 > div > ul')
+const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array
@@ -996,24 +1001,6 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 
-
-// function establishActionCableConnection() {
-//   cable.subscriptions.create('GameRoomChannel', {
-//     connected() {
-//       console.log("connected to the room")
-//     },
-
-//     disconnected() {
-//       // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
-//     },
-
-//     received(data) {
-//       // console.log(`This is the received data: ${data}`)
-//       Player.nameBoxCreator(data)
-//     },
-    
-//   });
-// }
 
 
 

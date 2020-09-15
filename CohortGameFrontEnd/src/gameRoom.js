@@ -52,13 +52,16 @@ class GameRoom {
     const gameLI  = document.createElement('li')
     const gameCardDiv = document.createElement('div')
     const cardDivContent = document.createElement('div')
+    const currentPlayerLi = document.createElement('li')
   
     div.className = 'row'
     ul.className = 'collection with-header'
     titleLi.className = 'collection-header blue-grey'
     gameLI.className = 'collection-item'
+    currentPlayerLi.className = 'collection-item'
     gameCardDiv.className = 'card blue-grey'
     cardDivContent.className = 'card-content white-text'
+    
     
     column9div().append(div)
     div.append(ul)
@@ -66,6 +69,7 @@ class GameRoom {
     ul.append(gameLI)
     gameLI.append(gameCardDiv)
     gameCardDiv.append(cardDivContent)
+    ul.append(currentPlayerLi)
 
   }
 
