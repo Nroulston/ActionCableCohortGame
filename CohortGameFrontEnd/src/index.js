@@ -1,34 +1,35 @@
  import ActionCable from 'actioncable'
+ import Player from './player'
 
-class Player {
-  constructor(id, name) {
-    this.id = id;
-    this.name = name;
-  }
+// class Player {
+//   constructor(id, name) {
+//     this.id = id;
+//     this.name = name;
+//   }
 
-  static create(id, name) {
+//   static create(id, name) {
    
-    let player = new Player(id, name)
-    allPlayer.addPlayer(player);
-    return player
-  }
+//     let player = new Player(id, name)
+//     allPlayer.addPlayer(player);
+//     return player
+//   }
   
-  static getPlayers() {
-    fetch('http://127.0.0.1:3000/players.json')
-    .then(response => response.json())
-    .then(json => { 
-      // console.log(`this is the fetch ${json} data`)
-      json.forEach( player => {
-        nameBoxCreator(player)
-      Player.create(player.id, player.name)
-      })
-       sendNameFetch()
-    })
-    .catch((error) => {
-      console.error('error:', error)
-    })
-  }
-}
+//   static getPlayers() {
+//     fetch('http://127.0.0.1:3000/players.json')
+//     .then(response => response.json())
+//     .then(json => { 
+//       // console.log(`this is the fetch ${json} data`)
+//       json.forEach( player => {
+//         nameBoxCreator(player)
+//       Player.create(player.id, player.name)
+//       })
+//        sendNameFetch()
+//     })
+//     .catch((error) => {
+//       console.error('error:', error)
+//     })
+//   }
+// }
 function nameBoxCreator(data) {
     const nameBoxDiv = document.createElement('div')
     const div1InsideOfBoxDiv = document.createElement('div')
@@ -56,14 +57,14 @@ class GameRoom {
     return this.turn
   }
   whoseTurnIsIt() {
-    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
+//     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
 
     nameBoxCreator(this.players[0])
-    // console.log('test')
-    // console.log(this.players)
+    console.log('test')
+    console.log(this.players)
   
-    //  console.log(allPlayer.currentPlayer(this.turn))
-  //  return allPlayer.currentPlayer(this.turn)
+     console.log(allPlayer.currentPlayer(this.turn))
+   return allPlayer.currentPlayer(this.turn)
   }
 }
 
@@ -84,19 +85,19 @@ const HEADERS = {
 };
  
 const cable = ActionCable.createConsumer(API_WS_ROOT)
-//getters
+// //getters
 const body = () => document.querySelector(".container")
 const userLogInDiv = () => document.querySelector('#showLogIn')
-const inputForm = () => document.querySelector("#user_name")
+export const inputForm = () => document.querySelector("#user_name")
 const column9div = () => document.querySelector('#col9')
-const column3div = () => document.querySelector('#col3')
+export const column3div = () => document.querySelector('#col3')
 
 const stopDisplayingLogin = () => {
 userLogInDiv().style.display = "none"
 }
-// the power of IIFE and closure all in one.
-// Gives us a constant that has persistent memory of the player array
-const allPlayer = (function() {
+// // the power of IIFE and closure all in one.
+// // Gives us a constant that has persistent memory of the player array
+export const allPlayer = (function() {
   const playersArray = []
   function addPlayerToAll(player) {
     playersArray.push(player)
@@ -124,15 +125,15 @@ const allPlayer = (function() {
 const enterGame = () => { 
  inputForm().addEventListener('keydown', function(e) {
    if (e.keyCode == 13) {
-     e.preventDefault()
-     stopDisplayingLogin()
+      e.preventDefault()
+      stopDisplayingLogin()
       establishActionCableConnection()
-     createLayout()
-     Player.getPlayers()
-     displayGameBoard()
-     const game = new GameRoom("Default", allPlayer.value())
-     game.whoseTurnIsIt()
-     //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
+      createLayout()
+      Player.getPlayers()
+      displayGameBoard()
+      const game = new GameRoom("Default", allPlayer.value())
+      // game.whoseTurnIsIt()
+      //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
      
    } 
  })
@@ -201,28 +202,9 @@ document.addEventListener("DOMContentLoaded", function() {
   inputDiv.append(inputField)
   inputDiv.append(inputLabel)
   enterGame()
-  
-
-
 })
 
-function sendNameFetch() {
-  const strongParamsPlayer = {
-    player: {
-      name: inputForm().value
-    }
-  } 
 
-  fetch('http://127.0.0.1:3000/players', {
-    method: 'POST',
-    headers: HEADERS,
-    body: JSON.stringify(strongParamsPlayer)
-    })
-    .then(response => response.json())
-    .then(json => { 
-      Player.create(json.id, json.name)
-    })
-}
 function establishActionCableConnection() {
   cable.subscriptions.create('GameRoomChannel', {
     connected() {
@@ -230,7 +212,7 @@ function establishActionCableConnection() {
     },
 
     disconnected() {
-      fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+      // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
     },
 
     received(data) {

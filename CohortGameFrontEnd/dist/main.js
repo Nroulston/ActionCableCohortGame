@@ -700,12 +700,26 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var actioncable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-/* harmony import */ var actioncable__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(actioncable__WEBPACK_IMPORTED_MODULE_0__);
- 
 
-class Player {
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, "inputForm", function() { return /* binding */ inputForm; });
+__webpack_require__.d(__webpack_exports__, "column3div", function() { return /* binding */ column3div; });
+__webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* binding */ allPlayer; });
+
+// EXTERNAL MODULE: ./node_modules/actioncable/lib/assets/compiled/action_cable.js
+var action_cable = __webpack_require__(0);
+var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
+
+// CONCATENATED MODULE: ./src/player.js
+
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'Accept' : 'application/json',
+};
+
+class player_Player {
   constructor(id, name) {
     this.id = id;
     this.name = name;
@@ -713,7 +727,7 @@ class Player {
 
   static create(id, name) {
    
-    let player = new Player(id, name)
+    let player = new player_Player(id, name)
     allPlayer.addPlayer(player);
     return player
   }
@@ -724,16 +738,85 @@ class Player {
     .then(json => { 
       // console.log(`this is the fetch ${json} data`)
       json.forEach( player => {
-        nameBoxCreator(player)
-      Player.create(player.id, player.name)
+       console.log(player)
+        player_Player.nameBoxCreator(player)
+        player_Player.create(player.id, player.name)
       })
-       sendNameFetch()
+       player_Player.sendNameFetch()
     })
     .catch((error) => {
       console.error('error:', error)
     })
   }
+  
+  static sendNameFetch() {
+    const strongParamsPlayer = {
+      player: {
+        name: inputForm().value
+      }
+    } 
+  
+    fetch('http://127.0.0.1:3000/players', {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(strongParamsPlayer)
+      })
+      .then(response => response.json())
+      .then(json => { 
+        player_Player.create(json.id, json.name)
+      })
+  }
+
+  static nameBoxCreator(data) {
+    const nameBoxDiv = document.createElement('div')
+    const div1InsideOfBoxDiv = document.createElement('div')
+    const div2InsideOfBoxDiv = document.createElement('div')
+    const nameBoxSpan = document.createElement('span')
+    nameBoxDiv.className = "row"
+    div2InsideOfBoxDiv.className = 'card-panel teal'
+    nameBoxSpan.className = 'white-text'
+    nameBoxSpan.innerText = data.name
+    column3div().append(nameBoxDiv)
+    nameBoxDiv.append(div1InsideOfBoxDiv)
+    div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
+    div2InsideOfBoxDiv.append(nameBoxSpan)
+  }
 }
+
+/* harmony default export */ var src_player = (player_Player);
+// CONCATENATED MODULE: ./src/index.js
+ 
+ 
+
+// class Player {
+//   constructor(id, name) {
+//     this.id = id;
+//     this.name = name;
+//   }
+
+//   static create(id, name) {
+   
+//     let player = new Player(id, name)
+//     allPlayer.addPlayer(player);
+//     return player
+//   }
+  
+//   static getPlayers() {
+//     fetch('http://127.0.0.1:3000/players.json')
+//     .then(response => response.json())
+//     .then(json => { 
+//       // console.log(`this is the fetch ${json} data`)
+//       json.forEach( player => {
+//         nameBoxCreator(player)
+//       Player.create(player.id, player.name)
+//       })
+//        sendNameFetch()
+//     })
+//     .catch((error) => {
+//       console.error('error:', error)
+//     })
+//   }
+// }
 function nameBoxCreator(data) {
     const nameBoxDiv = document.createElement('div')
     const div1InsideOfBoxDiv = document.createElement('div')
@@ -761,14 +844,14 @@ class GameRoom {
     return this.turn
   }
   whoseTurnIsIt() {
-    // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
+//     // both methods somehow cause a bug in console. If you copy the entire code over everything works fine.
 
     nameBoxCreator(this.players[0])
-    // console.log('test')
-    // console.log(this.players)
+    console.log('test')
+    console.log(this.players)
   
-    //  console.log(allPlayer.currentPlayer(this.turn))
-  //  return allPlayer.currentPlayer(this.turn)
+     console.log(allPlayer.currentPlayer(this.turn))
+   return allPlayer.currentPlayer(this.turn)
   }
 }
 
@@ -783,13 +866,13 @@ class PressTheLetterFirstGame extends GameRoom {
 }
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
-const HEADERS = {
+const src_HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
  
-const cable = actioncable__WEBPACK_IMPORTED_MODULE_0___default.a.createConsumer(API_WS_ROOT)
-//getters
+const cable = action_cable_default.a.createConsumer(API_WS_ROOT)
+// //getters
 const body = () => document.querySelector(".container")
 const userLogInDiv = () => document.querySelector('#showLogIn')
 const inputForm = () => document.querySelector("#user_name")
@@ -799,8 +882,8 @@ const column3div = () => document.querySelector('#col3')
 const stopDisplayingLogin = () => {
 userLogInDiv().style.display = "none"
 }
-// the power of IIFE and closure all in one.
-// Gives us a constant that has persistent memory of the player array
+// // the power of IIFE and closure all in one.
+// // Gives us a constant that has persistent memory of the player array
 const allPlayer = (function() {
   const playersArray = []
   function addPlayerToAll(player) {
@@ -829,15 +912,15 @@ const allPlayer = (function() {
 const enterGame = () => { 
  inputForm().addEventListener('keydown', function(e) {
    if (e.keyCode == 13) {
-     e.preventDefault()
-     stopDisplayingLogin()
+      e.preventDefault()
+      stopDisplayingLogin()
       establishActionCableConnection()
-     createLayout()
-     Player.getPlayers()
-     displayGameBoard()
-     const game = new GameRoom("Default", allPlayer.value())
-     game.whoseTurnIsIt()
-     //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
+      createLayout()
+      src_player.getPlayers()
+      displayGameBoard()
+      const game = new GameRoom("Default", allPlayer.value())
+      // game.whoseTurnIsIt()
+      //attempted to assign game.player and it came out undefined. It makes no sense as to why everything comes out undefined.
      
    } 
  })
@@ -906,28 +989,9 @@ document.addEventListener("DOMContentLoaded", function() {
   inputDiv.append(inputField)
   inputDiv.append(inputLabel)
   enterGame()
-  
-
-
 })
 
-function sendNameFetch() {
-  const strongParamsPlayer = {
-    player: {
-      name: inputForm().value
-    }
-  } 
 
-  fetch('http://127.0.0.1:3000/players', {
-    method: 'POST',
-    headers: HEADERS,
-    body: JSON.stringify(strongParamsPlayer)
-    })
-    .then(response => response.json())
-    .then(json => { 
-      Player.create(json.id, json.name)
-    })
-}
 function establishActionCableConnection() {
   cable.subscriptions.create('GameRoomChannel', {
     connected() {
@@ -935,7 +999,7 @@ function establishActionCableConnection() {
     },
 
     disconnected() {
-      fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+      // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
     },
 
     received(data) {
