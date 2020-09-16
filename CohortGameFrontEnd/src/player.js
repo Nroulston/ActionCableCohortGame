@@ -1,6 +1,6 @@
 import {column3div, allPlayer, inputForm} from './index'
 import GameRoom, { gameRoomInstance } from './gameRoom'
-const HEADERS = {
+export const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
@@ -26,9 +26,9 @@ class Player {
     fetch('http://127.0.0.1:3000/players.json')
     .then(response => response.json())
     .then(json => { 
-      // console.log(`this is the fetch ${json} data`)
+     
       json.forEach( player => {
-       console.log(player)
+    
         Player.nameBoxCreator(player)
         Player.create(player.id, player.name)
       })

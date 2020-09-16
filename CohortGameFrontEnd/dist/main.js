@@ -726,7 +726,9 @@ var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 
 
+
 let gameRoomsGames = undefined
+
 // getters
 const gameTitleLi = () => document.querySelector('#col9 > div > ul > li.collection-header.blue-grey')
 const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div')
@@ -758,7 +760,9 @@ class games_Games {
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
     gameBeingPlayed.renderGameSpecifics()
-    gameBeingPlayed.startTriviaGame()
+    gameBeingPlayed.startGame()
+    
+    gameBeingPlayed.constructor.addEvents()
     
     // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
  
@@ -772,10 +776,17 @@ class games_Games {
   renderGameGeneric() {
     gameTitleLi().innerText = this.name
     gameCardtext().innerText = this.board.instructions
-   
-    
+  }
+
+  static nextGameCard() {
+    fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
+      method: 'PATCH',
+      headers: HEADERS,
+      body: JSON.stringify({"t": "this"})
+      })
   }
 }
+
 class games_triviaGames extends games_Games{
   //board object takes attributes of instructions, and  and events
   constructor(name, boardObj) {
@@ -787,11 +798,11 @@ class games_triviaGames extends games_Games{
   static establishActionCableConnection() {
    triviaConnection = cable.subscriptions.create('TriviaChannel', {
       connected() {
-        console.log("connected to the trivia room")
+        
       },
 
       disconnected() {
-        console.log('disconnected')
+      
       },
       
       received(data) {
@@ -800,20 +811,16 @@ class games_triviaGames extends games_Games{
     });
     
   }
-  // todo when game is over update GameRoom.turn
-// todo check to see the length of array and reset turn to zero if it will be longer than the array
-// todo update the current game index in the controller
-// todo play twentyone pilots tomorrow
-  static nextGameCard() {
-    const objectToSend = { 
-      
-    }
-    debugger
+  
+  
+  
+  static addEvents() {
+    triviaSubmitBtn().addEventListener('click', super.nextGameCard)
   }
 
-  startTriviaGame() {
+  startGame() {
     games_triviaGames.establishActionCableConnection()
-    games_triviaGames.nextGameCard()
+    
   }
   renderGameSpecifics() {
     const row = document.createElement('div')
@@ -941,7 +948,7 @@ class gameRoom_GameRoom {
   static establishActionCableConnection() {
     cable.subscriptions.create('GameRoomChannel', {
       connected() {
-        console.log("connected to the room")
+       
       },
   
       disconnected() {
@@ -950,7 +957,7 @@ class gameRoom_GameRoom {
       
   
       received(data) {
-        // console.log(`This is the received data: ${data}`)
+       
         src_player.nameBoxCreator(data)
       },
       
@@ -999,9 +1006,9 @@ class player_Player {
     fetch('http://127.0.0.1:3000/players.json')
     .then(response => response.json())
     .then(json => { 
-      // console.log(`this is the fetch ${json} data`)
+     
       json.forEach( player => {
-       console.log(player)
+    
         player_Player.nameBoxCreator(player)
         player_Player.create(player.id, player.name)
       })

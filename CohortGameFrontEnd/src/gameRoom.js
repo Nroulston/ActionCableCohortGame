@@ -91,7 +91,7 @@ class GameRoom {
   static establishActionCableConnection() {
     cable.subscriptions.create('GameRoomChannel', {
       connected() {
-        console.log("connected to the room")
+       
       },
   
       disconnected() {
@@ -100,7 +100,7 @@ class GameRoom {
       
   
       received(data) {
-        // console.log(`This is the received data: ${data}`)
+       
         Player.nameBoxCreator(data)
       },
       
