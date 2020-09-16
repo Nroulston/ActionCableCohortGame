@@ -5,7 +5,7 @@ class PlayersController < ApplicationController
   def index
     players = Player.all
   
-    render json: players
+    render json: players, include: [:game_room]
   end
 
   # GET /players/1
@@ -20,8 +20,8 @@ class PlayersController < ApplicationController
     player = room.players.build(player_params)
 
     if player.save
-      ActionCable.server.broadcast('gameroom_channel', {name: player.name})
-      render json: @player, status: :created, location: @player
+      ActionCable.server.broadcast('gameroom_channel', {name: player.name, id: player.id})
+      render json: player, include: [:game_room], status: :created, location: @player
     else
       render json: @player.errors, status: :unprocessable_entity
     end
@@ -38,6 +38,7 @@ class PlayersController < ApplicationController
 
   # DELETE /players/1
   def destroy
+    byebug
     @player.destroy
   end
 

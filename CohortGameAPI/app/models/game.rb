@@ -1,5 +1,4 @@
 class Game < ApplicationRecord
-  serialize :code
   has_many :players
 end
 #todo honestly just start making your games class, then make your games extend from that class add all your methods and instance methods. See if you can  store all the games in a super class vairable in the toplevel game class. 

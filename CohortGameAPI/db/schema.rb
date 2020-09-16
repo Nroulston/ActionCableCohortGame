@@ -14,12 +14,15 @@ ActiveRecord::Schema.define(version: 2020_09_14_035550) do
 
   create_table "game_rooms", force: :cascade do |t|
     t.string "name"
+    t.integer "turn"
+    t.integer "currentGame"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "games", force: :cascade do |t|
     t.string "code"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
