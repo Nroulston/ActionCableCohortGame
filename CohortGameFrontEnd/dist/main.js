@@ -719,10 +719,24 @@ var action_cable = __webpack_require__(0);
 var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 // CONCATENATED MODULE: ./src/games.js
+
+
+let gameRoomGames = undefined
+
 class Games {
   constructor(gameArray = []) {
     this.players = {}
     this.gameArray = gameArray
+  }
+  static play() {
+
+  }
+
+  static create() {
+    gameRoomGames = new Games()
+    gameRoomGames.gameArray.push(new testGame())
+    debugger
+
   }
 }
 
@@ -762,9 +776,7 @@ class gameRoom_GameRoom {
     gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     gameRoom_GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
-    let gamesController = new Games 
-    let test = new testGame
-    let test2 = new PressTheLetterFirstGame
+    Games.create()
     debugger
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
@@ -868,7 +880,7 @@ const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-let game = undefined
+
 class player_Player {
   constructor(id, name) {
     this.id = id;
