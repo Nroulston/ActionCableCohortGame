@@ -2,13 +2,13 @@ class Games {
   
   }
 
-  class testGame extends GameRoom {
+  class testGame extends Games{
     constructor(name, players) {
       this.name = name
-      this.(players)
+      this.players = players
     }
   }
-  class PressTheLetterFirstGame extends GameRoom {
+  class PressTheLetterFirstGame extends Games{
     constructor(name, players) {
       this.name = name
       this.players = players

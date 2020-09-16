@@ -2,6 +2,8 @@
 
 // Todo figure out how to write async functions inside the class and make it a class method.
 
+// Todo work on a user being able to leave the game - need to get devise installed to create cookies that can be accesed inside of the actioncable channels.
+
  import ActionCable from 'actioncable'
  import Player from './player'
  import GameRoom from './gameRoom'

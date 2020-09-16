@@ -806,8 +806,15 @@ class gameRoom_GameRoom {
       },
   
       disconnected() {
-        // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+        debugger
+        fetch(`http://127.0.0.1:3000/players/1`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
       },
+      
   
       received(data) {
         // console.log(`This is the received data: ${data}`)
@@ -895,7 +902,7 @@ class player_Player {
 
   static renderCurrentPlayer() {
     currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
-    debugger
+   
   }
 
   static nameBoxCreator(data) {
@@ -919,13 +926,27 @@ class player_Player {
 // CONCATENATED MODULE: ./src/games.js
 class Games {
   
-}
+  }
 
+  class games_testGame extends Games{
+    constructor(name, players) {
+      this.name = name
+      this.players = players
+    }
+  }
+  class games_PressTheLetterFirstGame extends Games{
+    constructor(name, players) {
+      this.name = name
+      this.players = players
+    }
+  }
 /* harmony default export */ var games = (Games);
 // CONCATENATED MODULE: ./src/index.js
 // Todo figure out why when first accessing the site starts the actioncable process, on reload it doesn't.
 
 // Todo figure out how to write async functions inside the class and make it a class method.
+
+// Todo work on a user being able to leave the game
 
  
  

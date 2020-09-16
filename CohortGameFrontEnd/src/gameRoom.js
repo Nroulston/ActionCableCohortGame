@@ -85,8 +85,15 @@ class GameRoom {
       },
   
       disconnected() {
-        // fetch(`http://127.0.0.1:3000/players/${allPlayer.currentPlayer()}`)
+        debugger
+        fetch(`http://127.0.0.1:3000/players/1`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
       },
+      
   
       received(data) {
         // console.log(`This is the received data: ${data}`)

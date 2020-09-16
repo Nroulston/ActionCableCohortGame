@@ -62,7 +62,7 @@ class Player {
 
   static renderCurrentPlayer() {
     currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
-    debugger
+   
   }
 
   static nameBoxCreator(data) {
