@@ -26,11 +26,12 @@ class GameRoomsController < ApplicationController
 
   # PATCH/PUT /game_rooms/1
   def update
-    if @game_room.update(game_room_params)
-      render json: @game_room
-    else
-      render json: @game_room.errors, status: :unprocessable_entity
-    end
+    
+    @game_room.turn += 1
+    @game_room.currentGame += 1
+    @game_room.save
+    ActionCable.server.broadcast('Trivia_channel', {turn: @game_room.turn, currentGame: @game_room.currentGame})
+    
   end
 
   # DELETE /game_rooms/1
