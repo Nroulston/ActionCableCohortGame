@@ -1,11 +1,15 @@
 import Player from './player'
+import {Games, testGame, PressTheLetterFirstGame} from './games';
 import {allPlayer, inputForm, column9div, userLogInDiv, cable, body, game} from './index'
+
 export let gameRoomInstance = undefined
+
 class GameRoom {
   constructor(name,  id, turn=0) {
     this.name = name;
     this.turn = turn
     this.id = id
+
     this.currentTurnPlayer = undefined
 
   }
@@ -13,8 +17,10 @@ class GameRoom {
     gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
-
-    
+    let gamesController = new Games 
+    let test = new testGame
+    let test2 = new PressTheLetterFirstGame
+    debugger
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
   }

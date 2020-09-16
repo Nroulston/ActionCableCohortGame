@@ -718,15 +718,43 @@ __webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* b
 var action_cable = __webpack_require__(0);
 var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
+// CONCATENATED MODULE: ./src/games.js
+class Games {
+  constructor(gameArray = []) {
+    this.players = {}
+    this.gameArray = gameArray
+  }
+}
+
+  class testGame extends Games{
+    constructor(name, players) {
+      super([])
+      this.name = name
+      this.players = players
+    }
+  }
+
+  class PressTheLetterFirstGame extends Games{
+    constructor(name, players) {
+      super([])
+      this.name = name
+      this.players = players
+    }
+  }
+ 
 // CONCATENATED MODULE: ./src/gameRoom.js
 
 
+
+
 let gameRoomInstance = undefined
+
 class gameRoom_GameRoom {
   constructor(name,  id, turn=0) {
     this.name = name;
     this.turn = turn
     this.id = id
+
     this.currentTurnPlayer = undefined
 
   }
@@ -734,8 +762,10 @@ class gameRoom_GameRoom {
     gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     gameRoom_GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
-
-    
+    let gamesController = new Games 
+    let test = new testGame
+    let test2 = new PressTheLetterFirstGame
+    debugger
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
   }
@@ -806,13 +836,7 @@ class gameRoom_GameRoom {
       },
   
       disconnected() {
-        debugger
-        fetch(`http://127.0.0.1:3000/players/1`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
+       
       },
       
   
@@ -923,45 +947,19 @@ class player_Player {
 }
 
 /* harmony default export */ var src_player = (player_Player);
-// CONCATENATED MODULE: ./src/games.js
-class Games {
-  
-  }
-
-  class games_testGame extends Games{
-    constructor(name, players) {
-      this.name = name
-      this.players = players
-    }
-  }
-  class games_PressTheLetterFirstGame extends Games{
-    constructor(name, players) {
-      this.name = name
-      this.players = players
-    }
-  }
-/* harmony default export */ var games = (Games);
 // CONCATENATED MODULE: ./src/index.js
 // Todo figure out why when first accessing the site starts the actioncable process, on reload it doesn't.
 
 // Todo figure out how to write async functions inside the class and make it a class method.
 
-// Todo work on a user being able to leave the game
+// Todo work on a user being able to leave the game - need to get devise installed to create cookies that can be accesed inside of the actioncable channels.
 
  
  
  
  
 
-class src_testGame extends gameRoom {
 
-}
-class src_PressTheLetterFirstGame extends gameRoom {
-  constructor(name, players) {
-    this.name = name
-    super(players)
-  }
-}
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 const cable = action_cable_default.a.createConsumer(API_WS_ROOT)
