@@ -6,13 +6,14 @@ class GameRoom {
     this.name = name;
     this.turn = turn
     this.id = id
-    this.currentPlayer = undefined
+    this.currentTurnPlayer = undefined
 
   }
   static startGames(json) {
     gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
+    
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
@@ -102,7 +103,7 @@ class GameRoom {
   }
 
   setWhoseTurnItIs() {
-    this.currentPlayer = allPlayer.currentPlayer(this.turn)
+    this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     Player.renderCurrentPlayer()
   }
 }
