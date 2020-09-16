@@ -9,15 +9,7 @@
  import GameRoom from './gameRoom'
  import Games from './games'
 
-class testGame extends GameRoom {
 
-}
-class PressTheLetterFirstGame extends GameRoom {
-  constructor(name, players) {
-    this.name = name
-    super(players)
-  }
-}
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 export const cable = ActionCable.createConsumer(API_WS_ROOT)
