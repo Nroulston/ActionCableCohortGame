@@ -85,13 +85,7 @@ class GameRoom {
       },
   
       disconnected() {
-        debugger
-        fetch(`http://127.0.0.1:3000/players/1`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
+       
       },
       
   
