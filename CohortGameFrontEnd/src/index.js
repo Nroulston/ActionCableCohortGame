@@ -5,6 +5,7 @@
  import ActionCable from 'actioncable'
  import Player from './player'
  import GameRoom from './gameRoom'
+ import Games from './games'
 
 class testGame extends GameRoom {
 

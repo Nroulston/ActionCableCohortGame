@@ -13,7 +13,7 @@ class GameRoom {
     gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
-    
+
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.

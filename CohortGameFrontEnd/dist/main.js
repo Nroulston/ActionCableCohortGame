@@ -727,13 +727,14 @@ class gameRoom_GameRoom {
     this.name = name;
     this.turn = turn
     this.id = id
-    this.currentPlayer = undefined
+    this.currentTurnPlayer = undefined
 
   }
   static startGames(json) {
     gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
     gameRoom_GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
+
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
@@ -823,7 +824,7 @@ class gameRoom_GameRoom {
   }
 
   setWhoseTurnItIs() {
-    this.currentPlayer = allPlayer.currentPlayer(this.turn)
+    this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     src_player.renderCurrentPlayer()
   }
 }
@@ -893,6 +894,7 @@ class player_Player {
   }
 
   static renderCurrentPlayer() {
+    currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
     debugger
   }
 
@@ -914,11 +916,18 @@ class player_Player {
 }
 
 /* harmony default export */ var src_player = (player_Player);
+// CONCATENATED MODULE: ./src/games.js
+class Games {
+  
+}
+
+/* harmony default export */ var games = (Games);
 // CONCATENATED MODULE: ./src/index.js
 // Todo figure out why when first accessing the site starts the actioncable process, on reload it doesn't.
 
 // Todo figure out how to write async functions inside the class and make it a class method.
 
+ 
  
  
  
