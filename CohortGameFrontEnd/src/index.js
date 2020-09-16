@@ -4,6 +4,8 @@
 
 // Todo work on a user being able to leave the game - need to get devise installed to create cookies that can be accesed inside of the actioncable channels.
 
+// Todo find out if you can call a instance's methods dynamically based on knowing what object you want to call.
+
  import ActionCable from 'actioncable'
  import Player from './player'
  import GameRoom from './gameRoom'
@@ -20,7 +22,8 @@ export const inputForm = () => document.querySelector("#user_name")
 export const column9div = () => document.querySelector('#col9')
 export const column3div = () => document.querySelector('#col3')
 export const gameBoard = () => document.querySelector('#col9 > div > ul')
-export const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
+
+
 
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array

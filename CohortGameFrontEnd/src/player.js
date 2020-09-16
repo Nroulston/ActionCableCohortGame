@@ -1,9 +1,11 @@
-import {column3div, allPlayer, inputForm, currentPlayerLI} from './index'
+import {column3div, allPlayer, inputForm} from './index'
 import GameRoom, { gameRoomInstance } from './gameRoom'
 const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
+
+const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 class Player {
   constructor(id, name) {

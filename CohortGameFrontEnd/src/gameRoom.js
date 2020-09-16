@@ -1,5 +1,5 @@
 import Player from './player'
-import {Games, testGame, PressTheLetterFirstGame, gameRoomGames} from './games';
+import {Games, triviaGames, PressTheLetterFirstGame, gameRoomGames} from './games';
 import {allPlayer, inputForm, column9div, userLogInDiv, cable, body, game} from './index'
 
 export let gameRoomInstance = undefined
@@ -18,6 +18,9 @@ class GameRoom {
     GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
     Games.create()
+    // todo pass in the currentGame, call the gameroom instance
+  
+    gameRoomGames.renderGames()
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.

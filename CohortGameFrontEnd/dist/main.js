@@ -711,7 +711,6 @@ __webpack_require__.d(__webpack_exports__, "inputForm", function() { return /* b
 __webpack_require__.d(__webpack_exports__, "column9div", function() { return /* binding */ column9div; });
 __webpack_require__.d(__webpack_exports__, "column3div", function() { return /* binding */ column3div; });
 __webpack_require__.d(__webpack_exports__, "gameBoard", function() { return /* binding */ gameBoard; });
-__webpack_require__.d(__webpack_exports__, "currentPlayerLI", function() { return /* binding */ currentPlayerLI; });
 __webpack_require__.d(__webpack_exports__, "allPlayer", function() { return /* binding */ allPlayer; });
 
 // EXTERNAL MODULE: ./node_modules/actioncable/lib/assets/compiled/action_cable.js
@@ -719,11 +718,21 @@ var action_cable = __webpack_require__(0);
 var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 // CONCATENATED MODULE: ./src/games.js
+// import GameRoom, { gameRoomInstance } from './gameRoom'
+// todo render the first game 
+// todo when game is over update GameRoom.turn
+// todo check to see the length of array and reset turn to zero if it will be longer than the array
+// todo update the current game index in the controller
+// todo play twentyone pilots tomorrow
+
 
 
 let gameRoomGames = undefined
 
-class Games {
+const gameTitleLi = () => document.querySelector('#col9 > div > ul > li.collection-header.blue-grey')
+const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div > div')
+
+class games_Games {
   constructor(gameArray = []) {
     this.players = {}
     this.gameArray = gameArray
@@ -733,26 +742,66 @@ class Games {
   }
 
   static create() {
-    gameRoomGames = new Games()
-    gameRoomGames.gameArray.push(new testGame())
-    debugger
+    gameRoomGames = new games_Games()
+    gameRoomGames.gameArray.push(new games_triviaGames("test" ,{instructions: "These are instructions"}))
+    gameRoomGames.gameArray.push(new PressTheLetterFirstGame)
+    
+  }
 
+  renderGames() {
+    let gameBeingPlayed = gameRoomGames.gameArray[gameRoomInstance
+    .currentGame]
+    gameBeingPlayed.render()
+  } 
+  
+  render() {
+    gameTitleLi().innerText = this.name
+    gameCard().innerText = this.board.instructions
+    this.constructor.establishActionCableConnection()
   }
 }
-
-  class testGame extends Games{
-    constructor(name, players) {
-      super([])
-      this.name = name
-      this.players = players
-    }
+class games_triviaGames extends games_Games{
+  //board object takes attributes of instructions, and  and events
+  constructor(name, boardObj) {
+    super([])
+    this.name = name
+    this.board = boardObj
   }
 
-  class PressTheLetterFirstGame extends Games{
+  static establishActionCableConnection() {
+    cable.subscriptions.create('TriviaChannel', {
+      connected() {
+        console.log("connected to the trivia room")
+      },
+
+      disconnected() {
+      
+      },
+      
+      received(data) {
+        console.log(`This is the received data: ${data}`)
+      },
+    });
+  }
+
+  startTriviaGame() {
+    games_triviaGames.establishActionCableConnection()
+
+  }
+  
+  
+}
+
+
+
+  class PressTheLetterFirstGame extends games_Games{
     constructor(name, players) {
       super([])
-      this.name = name
+      this.name = "test"
       this.players = players
+      this.board = {
+        instructions: "This is the test instructions"
+      }
     }
   }
  
@@ -764,20 +813,23 @@ class Games {
 let gameRoomInstance = undefined
 
 class gameRoom_GameRoom {
-  constructor(name,  id, turn=0) {
+  constructor(name,  id, turn=0, currentGame) {
     this.name = name;
     this.turn = turn
     this.id = id
-
+    this.currentGame = currentGame
     this.currentTurnPlayer = undefined
 
   }
   static startGames(json) {
-    gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn )
+    gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
     gameRoom_GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
-    Games.create()
-    debugger
+    games_Games.create()
+    // todo pass in the currentGame, call the gameroom instance
+  
+    gameRoomGames.renderGames()
+    
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
   }
@@ -881,6 +933,8 @@ const HEADERS = {
   'Accept' : 'application/json',
 };
 
+const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
+
 class player_Player {
   constructor(id, name) {
     this.id = id;
@@ -966,6 +1020,8 @@ class player_Player {
 
 // Todo work on a user being able to leave the game - need to get devise installed to create cookies that can be accesed inside of the actioncable channels.
 
+// Todo find out if you can call a instance's methods dynamically based on knowing what object you want to call.
+
  
  
  
@@ -982,7 +1038,8 @@ const inputForm = () => document.querySelector("#user_name")
 const column9div = () => document.querySelector('#col9')
 const column3div = () => document.querySelector('#col3')
 const gameBoard = () => document.querySelector('#col9 > div > ul')
-const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
+
+
 
 // // the power of IIFE and closure all in one.
 // // Gives us a constant that has persistent memory of the player array
