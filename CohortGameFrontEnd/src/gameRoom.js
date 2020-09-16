@@ -1,5 +1,5 @@
 import Player from './player'
-import {Games, triviaGames, PressTheLetterFirstGame, gameRoomGames} from './games';
+import {Games, triviaGames, PressTheLetterFirstGame, gameRoomsGames} from './games';
 import {allPlayer, inputForm, column9div, userLogInDiv, cable, body, game} from './index'
 
 export let gameRoomInstance = undefined
@@ -11,16 +11,18 @@ class GameRoom {
     this.id = id
     this.currentGame = currentGame
     this.currentTurnPlayer = undefined
+    // potentially change currentGame to currentGame index to make more sense when reading the code. 
 
   }
   static startGames(json) {
     gameRoomInstance = new GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
+    
     GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
     Games.create()
     // todo pass in the currentGame, call the gameroom instance
   
-    gameRoomGames.renderGames()
+    gameRoomsGames.renderGames()
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
@@ -59,12 +61,13 @@ class GameRoom {
     const titleLi = document.createElement('li')
     const gameLI  = document.createElement('li')
     const gameCardDiv = document.createElement('div')
+    // const instrucitonsDiv = document.createElement()
     const cardDivContent = document.createElement('div')
     const currentPlayerLi = document.createElement('li')
   
     div.className = 'row'
     ul.className = 'collection with-header'
-    titleLi.className = 'collection-header blue-grey'
+    titleLi.className = 'collection-header blue-grey center-align'
     gameLI.className = 'collection-item'
     currentPlayerLi.className = 'collection-item'
     gameCardDiv.className = 'card blue-grey'

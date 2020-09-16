@@ -719,7 +719,6 @@ var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 // CONCATENATED MODULE: ./src/games.js
 // import GameRoom, { gameRoomInstance } from './gameRoom'
-// todo render the first game 
 // todo when game is over update GameRoom.turn
 // todo check to see the length of array and reset turn to zero if it will be longer than the array
 // todo update the current game index in the controller
@@ -727,10 +726,16 @@ var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 
 
-let gameRoomGames = undefined
-
+let gameRoomsGames = undefined
+// getters
 const gameTitleLi = () => document.querySelector('#col9 > div > ul > li.collection-header.blue-grey')
-const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div > div')
+const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div')
+const gameCardtext = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div > div')
+const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
+
+// hoisted game variables
+let triviaConnection = undefined
+let gameBeingPlayed = undefined
 
 class games_Games {
   constructor(gameArray = []) {
@@ -742,22 +747,33 @@ class games_Games {
   }
 
   static create() {
-    gameRoomGames = new games_Games()
-    gameRoomGames.gameArray.push(new games_triviaGames("test" ,{instructions: "These are instructions"}))
-    gameRoomGames.gameArray.push(new PressTheLetterFirstGame)
-    
+    gameRoomsGames = new games_Games()
+    gameRoomsGames.gameArray.push(new games_triviaGames("trivia" ,{instructions: "These are instructions"}))
+    gameRoomsGames.gameArray.push(new PressTheLetterFirstGame)
   }
 
+ 
   renderGames() {
-    let gameBeingPlayed = gameRoomGames.gameArray[gameRoomInstance
+    gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
-    gameBeingPlayed.render()
+    gameBeingPlayed.renderGameGeneric()
+    gameBeingPlayed.renderGameSpecifics()
+    gameBeingPlayed.startTriviaGame()
+    
+    // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
+ 
+
+    //cable.subscriptions.remove(global connection variable)
+
+    //below disconnects from all channels
+    // cable.disconnect()
   } 
   
-  render() {
+  renderGameGeneric() {
     gameTitleLi().innerText = this.name
-    gameCard().innerText = this.board.instructions
-    this.constructor.establishActionCableConnection()
+    gameCardtext().innerText = this.board.instructions
+   
+    
   }
 }
 class games_triviaGames extends games_Games{
@@ -769,24 +785,50 @@ class games_triviaGames extends games_Games{
   }
 
   static establishActionCableConnection() {
-    cable.subscriptions.create('TriviaChannel', {
+   triviaConnection = cable.subscriptions.create('TriviaChannel', {
       connected() {
         console.log("connected to the trivia room")
       },
 
       disconnected() {
-      
+        console.log('disconnected')
       },
       
       received(data) {
         console.log(`This is the received data: ${data}`)
       },
     });
+    
+  }
+  // todo when game is over update GameRoom.turn
+// todo check to see the length of array and reset turn to zero if it will be longer than the array
+// todo update the current game index in the controller
+// todo play twentyone pilots tomorrow
+  static nextGameCard() {
+    const objectToSend = { 
+      
+    }
+    debugger
   }
 
   startTriviaGame() {
     games_triviaGames.establishActionCableConnection()
-
+    games_triviaGames.nextGameCard()
+  }
+  renderGameSpecifics() {
+    const row = document.createElement('div')
+    const btn = document.createElement('a')
+    const div = document.createElement('div')
+    row.className = "center-align"
+    btn.className = "waves-effect waves-light btn-large"
+    btn.setAttribute('id', "submitTrivia")
+    btn.innerText = "Next Card" 
+    row.className = "row"
+    div.className = 'center-align col s12'
+    gameCard().append(row)
+    row.append(div)
+    div.append(btn)
+    
   }
   
   
@@ -819,16 +861,18 @@ class gameRoom_GameRoom {
     this.id = id
     this.currentGame = currentGame
     this.currentTurnPlayer = undefined
+    // potentially change currentGame to currentGame index to make more sense when reading the code. 
 
   }
   static startGames(json) {
     gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
+    
     gameRoom_GameRoom.displayGameBoard()
     gameRoomInstance.setWhoseTurnItIs()
     games_Games.create()
     // todo pass in the currentGame, call the gameroom instance
   
-    gameRoomGames.renderGames()
+    gameRoomsGames.renderGames()
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
     // when submitting make sure to update back to index zero if you are at the length of the current player array.
@@ -867,12 +911,13 @@ class gameRoom_GameRoom {
     const titleLi = document.createElement('li')
     const gameLI  = document.createElement('li')
     const gameCardDiv = document.createElement('div')
+    // const instrucitonsDiv = document.createElement()
     const cardDivContent = document.createElement('div')
     const currentPlayerLi = document.createElement('li')
   
     div.className = 'row'
     ul.className = 'collection with-header'
-    titleLi.className = 'collection-header blue-grey'
+    titleLi.className = 'collection-header blue-grey center-align'
     gameLI.className = 'collection-item'
     currentPlayerLi.className = 'collection-item'
     gameCardDiv.className = 'card blue-grey'
