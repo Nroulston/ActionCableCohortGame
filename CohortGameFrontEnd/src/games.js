@@ -3,7 +3,7 @@
 // todo check to see the length of array and reset turn to zero if it will be longer than the array
 // todo update the current game index in the controller
 // todo play twentyone pilots tomorrow
-import {cable} from './index'
+import {cable, allPlayer} from './index'
 import { gameRoomInstance } from "./gameRoom"
 import {HEADERS, player} from './player'
 
@@ -57,14 +57,27 @@ class Games {
 
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
+    const strongParamsGameRoom = {
+      game_room: {
+        turn: gameRoomInstance.turn,
+        currentGame: gameRoomInstance.currentGame,
+      }
+    }
     if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
-      debugger
+      gameRoomInstance.currentGame = 0
+    } else {
+      gameRoomInstance += 1
+    }
+    if(allPlayer.value().length == (gameRoomInstance.turn + 1)) {
+      gameRoomInstance.turn = 0
+    } else {
+      gameRoomInstance.incrementTurn()
     }
 
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify({"t": "this"})
+      body: JSON.stringify(`${gameRoomInstance}`)
       })
   }
 }
@@ -160,7 +173,6 @@ class triviaGames extends Games{
   
   
 }
-// figure out how to send the the winning player over in the fetch PUT/Patch request. Try each one to see if that matters. The winning player is the person who clicks the right letter. 
 class PressTheLetterFirstGame extends Games{
   constructor(name, board,) {
     super([])

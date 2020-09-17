@@ -26,9 +26,10 @@ class GameRoomsController < ApplicationController
 
   # PATCH/PUT /game_rooms/1
   def update
-    
-    @game_room.turn += 1
-    @game_room.currentGame += 1
+   
+    data = params['gameRoomInstance']
+    @game_room.turn = data.turn
+    @game_room.currentGame = data.currentGame
     @game_room.save
     ActionCable.server.broadcast('Trivia_channel', {turn: @game_room.turn, currentGame: @game_room.currentGame})
     

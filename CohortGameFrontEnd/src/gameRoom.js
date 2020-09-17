@@ -116,6 +116,10 @@ class GameRoom {
     this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     Player.renderCurrentPlayer()
   }
+
+  setTurnFromBroadcast() {
+    
+  }
 }
 
 export default GameRoom

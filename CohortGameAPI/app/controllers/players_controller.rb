@@ -15,7 +15,7 @@ class PlayersController < ApplicationController
 
   # POST /players
   def create
-    
+   
     room = GameRoom.find(1)
     player = room.players.build(player_params)
 

@@ -754,7 +754,7 @@ class games_Games {
   
  
   renderGames() {
-    gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
+    gameBeingPlayed = gameRoomsGames.gameArray[gameRoom_gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
     gameBeingPlayed.renderGameSpecifics()
@@ -777,14 +777,28 @@ class games_Games {
 
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
-    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
-      debugger
+    const strongParamsGameRoom = {
+      game_room: {
+        turn: gameRoom_gameRoomInstance.turn,
+        currentGame: gameRoom_gameRoomInstance.currentGame,
+      }
+    }
+    
+    if (gameRoom_gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
+      gameRoom_gameRoomInstance.currentGame = 0
+    } else {
+      gameRoomInstance += 1
+    }
+    if(allPlayer.value().length == (gameRoom_gameRoomInstance.turn + 1)) {
+      gameRoom_gameRoomInstance.turn = 0
+    } else {
+      gameRoom_gameRoomInstance.turn += 1
     }
 
-    fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
+    fetch(`http://127.0.0.1:3000/game_rooms/${gameRoom_gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify({"t": "this"})
+      body: JSON.stringify(`${gameRoom_gameRoomInstance}`)
       })
   }
 }
@@ -896,7 +910,7 @@ class PressTheLetterFirstGame extends games_Games{
 
 
 
-let gameRoomInstance = undefined
+let gameRoom_gameRoomInstance = undefined
 
 class gameRoom_GameRoom {
   constructor(name,  id, turn=0, currentGame) {
@@ -909,10 +923,10 @@ class gameRoom_GameRoom {
 
   }
   static startGames(json) {
-    gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
+    gameRoom_gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
     
     gameRoom_GameRoom.displayGameBoard()
-    gameRoomInstance.setWhoseTurnItIs()
+    gameRoom_gameRoomInstance.setWhoseTurnItIs()
     games_Games.create()
     // todo pass in the currentGame, call the gameroom instance
     gameRoomsGames.renderGames()
@@ -1080,7 +1094,7 @@ class player_Player {
   }
 
   static renderCurrentPlayer() {
-    currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
+    currentPlayerLI().innerText = `It is currently ${gameRoom_gameRoomInstance.currentTurnPlayer.name}'s turn`
    
   }
 
