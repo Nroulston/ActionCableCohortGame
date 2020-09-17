@@ -1,5 +1,5 @@
 import Player from './player'
-import {Games, triviaGames, PressTheLetterFirstGame, gameRoomsGames} from './games';
+import {Games,gameRoomsGames} from './games';
 import {allPlayer, inputForm, column9div, userLogInDiv, cable, body, game} from './index'
 
 export let gameRoomInstance = undefined

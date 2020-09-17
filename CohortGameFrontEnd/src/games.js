@@ -28,12 +28,12 @@ class Games {
   static create() {
     gameRoomsGames = new Games()
     triviaGames.createAllTriviaGames()
-    gameRoomsGames.gameArray.push(new PressTheLetterFirstGame)
   }
 
   
  
   renderGames() {
+    debugger
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
@@ -41,13 +41,7 @@ class Games {
     gameBeingPlayed.startGame()
     gameBeingPlayed.constructor.addEvents()
     
-    // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
  
-
-    //cable.subscriptions.remove(global connection variable)
-
-    //below disconnects from all channels
-    // cable.disconnect()
   } 
   
   renderGameGeneric() {
@@ -94,7 +88,6 @@ class triviaGames extends Games{
   static createAllTriviaGames() {
     triviaGames.createBasicTriviaGames("Drinks all around" ,{instructions: "Everyone raise their drinks and say cheers"})
     triviaGames.createBasicTriviaGames("Group Pick", {instructions: "Everyone type a player in the chat \n \n The player called out the most drinks"})
-    triviaGames.createRoundTriviaGame("")
     triviaGames.createBasicTriviaGames("Hariest", {instructions: "Hariest player drinks"})
     triviaGames.createBasicTriviaGames("Hobbies", {instructions: "Tell Everyone your favourite hobby then drink"})
     triviaGames.createBasicTriviaGames("Text tell or drink", {instructions: "Every player must read their last text out loud or drink"})
@@ -128,22 +121,23 @@ class triviaGames extends Games{
   }
 
   static establishActionCableConnection() {
-   triviaConnection = cable.subscriptions.create('TriviaChannel', {
-      connected() {
-        
-      },
+   if (!triviaConnection) {
+      triviaConnection = cable.subscriptions.create('TriviaChannel', {
+        connected() {
+          
+        },
 
-      disconnected() {
-      
-      },
-      
-      received(data) {
-        gameRoomInstance.setInfoFromBroadcast(data)
-        console.log(`This is the received data: ${data}`)
-        debugger
-      },
-    });
-    
+        disconnected() {
+        
+        },
+        
+        received(data) {
+          gameRoomInstance.setInfoFromBroadcast(data)
+          
+          debugger
+        },
+      });
+    }
   }
   
   
@@ -189,3 +183,11 @@ export {
   triviaGames,
   PressTheLetterFirstGame,
 } 
+
+   // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
+ 
+
+    //cable.subscriptions.remove(global connection variable)
+
+    //below disconnects from all channels
+    // cable.disconnect()

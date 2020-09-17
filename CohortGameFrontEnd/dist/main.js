@@ -754,6 +754,7 @@ class games_Games {
   
  
   renderGames() {
+    debugger
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
@@ -761,13 +762,7 @@ class games_Games {
     gameBeingPlayed.startGame()
     gameBeingPlayed.constructor.addEvents()
     
-    // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
  
-
-    //cable.subscriptions.remove(global connection variable)
-
-    //below disconnects from all channels
-    // cable.disconnect()
   } 
   
   renderGameGeneric() {
@@ -848,22 +843,23 @@ class games_triviaGames extends games_Games{
   }
 
   static establishActionCableConnection() {
-   triviaConnection = cable.subscriptions.create('TriviaChannel', {
-      connected() {
-        
-      },
+   if (!triviaConnection) {
+      triviaConnection = cable.subscriptions.create('TriviaChannel', {
+        connected() {
+          
+        },
 
-      disconnected() {
-      
-      },
-      
-      received(data) {
-        gameRoomInstance.setInfoFromBroadcast(data)
-        console.log(`This is the received data: ${data}`)
-        debugger
-      },
-    });
-    
+        disconnected() {
+        
+        },
+        
+        received(data) {
+          gameRoomInstance.setInfoFromBroadcast(data)
+          
+          debugger
+        },
+      });
+    }
   }
   
   
@@ -905,6 +901,14 @@ class PressTheLetterFirstGame extends games_Games{
   }
 }
  
+
+   // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
+ 
+
+    //cable.subscriptions.remove(global connection variable)
+
+    //below disconnects from all channels
+    // cable.disconnect()
 // CONCATENATED MODULE: ./src/gameRoom.js
 
 
