@@ -744,16 +744,14 @@ class games_Games {
     this.players = {}
     this.gameArray = gameArray
   }
-  static play() {
-
-  }
-
+ 
   static create() {
     gameRoomsGames = new games_Games()
-    gameRoomsGames.gameArray.push(new games_triviaGames("trivia" ,{instructions: "These are instructions"}))
+    games_triviaGames.createAllTriviaGames()
     gameRoomsGames.gameArray.push(new PressTheLetterFirstGame)
   }
 
+  
  
   renderGames() {
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
@@ -761,7 +759,6 @@ class games_Games {
     gameBeingPlayed.renderGameGeneric()
     gameBeingPlayed.renderGameSpecifics()
     gameBeingPlayed.startGame()
-    
     gameBeingPlayed.constructor.addEvents()
     
     // call the below to disconnect from a specific channel. Save the connection when made into a global variable. Use that as the passed in argument. 
@@ -779,6 +776,11 @@ class games_Games {
   }
 
   static nextGameCard() {
+    //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
+    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
+      debugger
+    }
+
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
@@ -793,6 +795,43 @@ class games_triviaGames extends games_Games{
     super([])
     this.name = name
     this.board = boardObj
+    this.roundsGameLasts
+  }
+  
+  static createAllTriviaGames() {
+    games_triviaGames.createBasicTriviaGames("Drinks all around" ,{instructions: "Everyone raise their drinks and say cheers"})
+    games_triviaGames.createBasicTriviaGames("Group Pick", {instructions: "Everyone type a player in the chat \n \n The player called out the most drinks"})
+    games_triviaGames.createRoundTriviaGame("")
+    games_triviaGames.createBasicTriviaGames("Hariest", {instructions: "Hariest player drinks"})
+    games_triviaGames.createBasicTriviaGames("Hobbies", {instructions: "Tell Everyone your favourite hobby then drink"})
+    games_triviaGames.createBasicTriviaGames("Text tell or drink", {instructions: "Every player must read their last text out loud or drink"})
+    games_triviaGames.createRoundTriviaGame("Ban a word", {instructions: "You can pick a word that is banned for two rounds if anyone says this word they must drink"}, 2)
+    games_triviaGames.createBasicTriviaGames("Can You Read It", {instructions: "if yuo cna raed tihs tehn dinrk"})
+    games_triviaGames.createRoundTriviaGame("No Phones", {instructions: "For one round if anyone checks their phone they must drink"}, 1)
+    games_triviaGames.createBasicTriviaGames("Phone Love", {instructions: "Call someone and tell them you love them"})
+    games_triviaGames.createBasicTriviaGames("Dance!!!", {instructions: 'Do a dance or Take a drink'})
+    games_triviaGames.createRoundTriviaGame("Close your eyes", {instructions: 'Play this round with your eyes closed'}, 1)
+    games_triviaGames.createBasicTriviaGames("Who is sober", {instructions: 'Everyond vote who the most sober player is in the chat, They must drink half their drink'})
+    games_triviaGames.createBasicTriviaGames('Single?', {instructions: 'Drink if you have been singe for 6 months or more'})
+    games_triviaGames.createBasicTriviaGames("Vegan?", {instructions: 'Vegans drink'})
+    games_triviaGames.createBasicTriviaGames('CoinToss', {instructions: 'Choose heads or tails and flip a coin, if correct then everyone except you drinks, if incorrect then you drink '})
+    games_triviaGames.createBasicTriviaGames("Gesture train", {instructions: 'Make a gesture. The next player must must repeat the gesture and make another one. Keep going repeating the Gesture train and making a new one until someone forgets. The player who forgets must drink'})
+    games_triviaGames.createBasicTriviaGames("Can you tell?", {instructions: 'Tell EVeryone two truths and one lie. Every player must guess which one is a lie. If you get it wrong drink.'})
+
+
+
+
+
+    
+
+  }
+  static createBasicTriviaGames(nameStr, instructionsObj) {
+    gameRoomsGames.gameArray.push(new games_triviaGames(nameStr, instructionsObj))
+
+  } 
+
+  static createRoundTriviaGame(nameStr, instructionsObj, roundsGameLasts) {
+    gameRoomsGames.gameArray.push(new games_triviaGames(nameStr, instructionsObj, roundsGameLasts))
   }
 
   static establishActionCableConnection() {
@@ -823,6 +862,7 @@ class games_triviaGames extends games_Games{
     
   }
   renderGameSpecifics() {
+    // write an if statement that renders a small game card that keeps track of the turns it has left and it's rules.
     const row = document.createElement('div')
     const btn = document.createElement('a')
     const div = document.createElement('div')
@@ -840,19 +880,16 @@ class games_triviaGames extends games_Games{
   
   
 }
-
-
-
-  class PressTheLetterFirstGame extends games_Games{
-    constructor(name, players) {
-      super([])
-      this.name = "test"
-      this.players = players
-      this.board = {
-        instructions: "This is the test instructions"
-      }
+// figure out how to send the the winning player over in the fetch PUT/Patch request. Try each one to see if that matters. The winning player is the person who clicks the right letter. 
+class PressTheLetterFirstGame extends games_Games{
+  constructor(name, board,) {
+    super([])
+    this.name = name
+    this.board = {
+      instructions: "T"
     }
   }
+}
  
 // CONCATENATED MODULE: ./src/gameRoom.js
 
@@ -878,7 +915,6 @@ class gameRoom_GameRoom {
     gameRoomInstance.setWhoseTurnItIs()
     games_Games.create()
     // todo pass in the currentGame, call the gameroom instance
-  
     gameRoomsGames.renderGames()
     
     // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
@@ -984,6 +1020,7 @@ const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
+let player = undefined
 
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
@@ -995,7 +1032,7 @@ class player_Player {
 
   static create(id, name) {
    
-    let player = new player_Player(id, name)
+    player = new player_Player(id, name)
     
     allPlayer.addPlayer(player);
     
