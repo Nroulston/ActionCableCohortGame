@@ -66,7 +66,7 @@ class Games {
     if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
       gameRoomInstance.currentGame = 0
     } else {
-      gameRoomInstance += 1
+      gameRoomInstance.currentGame += 1
     }
     if(allPlayer.value().length == (gameRoomInstance.turn + 1)) {
       gameRoomInstance.turn = 0
@@ -77,7 +77,7 @@ class Games {
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify(`${gameRoomInstance}`)
+      body: JSON.stringify(gameRoomInstance)
       })
   }
 }
@@ -138,7 +138,9 @@ class triviaGames extends Games{
       },
       
       received(data) {
+        gameRoomInstance.setInfoFromBroadcast(data)
         console.log(`This is the received data: ${data}`)
+        debugger
       },
     });
     

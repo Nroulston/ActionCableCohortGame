@@ -754,7 +754,7 @@ class games_Games {
   
  
   renderGames() {
-    gameBeingPlayed = gameRoomsGames.gameArray[gameRoom_gameRoomInstance
+    gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
     gameBeingPlayed.renderGameSpecifics()
@@ -779,26 +779,25 @@ class games_Games {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
     const strongParamsGameRoom = {
       game_room: {
-        turn: gameRoom_gameRoomInstance.turn,
-        currentGame: gameRoom_gameRoomInstance.currentGame,
+        turn: gameRoomInstance.turn,
+        currentGame: gameRoomInstance.currentGame,
       }
     }
-    
-    if (gameRoom_gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
-      gameRoom_gameRoomInstance.currentGame = 0
+    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
+      gameRoomInstance.currentGame = 0
     } else {
-      gameRoomInstance += 1
+      gameRoomInstance.currentGame += 1
     }
-    if(allPlayer.value().length == (gameRoom_gameRoomInstance.turn + 1)) {
-      gameRoom_gameRoomInstance.turn = 0
+    if(allPlayer.value().length == (gameRoomInstance.turn + 1)) {
+      gameRoomInstance.turn = 0
     } else {
-      gameRoom_gameRoomInstance.turn += 1
+      gameRoomInstance.incrementTurn()
     }
 
-    fetch(`http://127.0.0.1:3000/game_rooms/${gameRoom_gameRoomInstance.id}`, {
+    fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify(`${gameRoom_gameRoomInstance}`)
+      body: JSON.stringify(gameRoomInstance)
       })
   }
 }
@@ -859,7 +858,9 @@ class games_triviaGames extends games_Games{
       },
       
       received(data) {
+        gameRoomInstance.setInfoFromBroadcast(data)
         console.log(`This is the received data: ${data}`)
+        debugger
       },
     });
     
@@ -894,7 +895,6 @@ class games_triviaGames extends games_Games{
   
   
 }
-// figure out how to send the the winning player over in the fetch PUT/Patch request. Try each one to see if that matters. The winning player is the person who clicks the right letter. 
 class PressTheLetterFirstGame extends games_Games{
   constructor(name, board,) {
     super([])
@@ -910,7 +910,7 @@ class PressTheLetterFirstGame extends games_Games{
 
 
 
-let gameRoom_gameRoomInstance = undefined
+let gameRoomInstance = undefined
 
 class gameRoom_GameRoom {
   constructor(name,  id, turn=0, currentGame) {
@@ -923,10 +923,10 @@ class gameRoom_GameRoom {
 
   }
   static startGames(json) {
-    gameRoom_gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
+    gameRoomInstance = new gameRoom_GameRoom(json.game_room.name, json.game_room_id, json.game_room.turn, json.game_room.currentGame )
     
     gameRoom_GameRoom.displayGameBoard()
-    gameRoom_gameRoomInstance.setWhoseTurnItIs()
+    gameRoomInstance.setWhoseTurnItIs()
     games_Games.create()
     // todo pass in the currentGame, call the gameroom instance
     gameRoomsGames.renderGames()
@@ -1024,6 +1024,11 @@ class gameRoom_GameRoom {
     this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     src_player.renderCurrentPlayer()
   }
+
+  setInfoFromBroadcast(data) {
+    this.turn = data.turn
+    this.currentGame = data.currentGame
+  }
 }
 
 /* harmony default export */ var gameRoom = (gameRoom_GameRoom);
@@ -1094,7 +1099,7 @@ class player_Player {
   }
 
   static renderCurrentPlayer() {
-    currentPlayerLI().innerText = `It is currently ${gameRoom_gameRoomInstance.currentTurnPlayer.name}'s turn`
+    currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
    
   }
 

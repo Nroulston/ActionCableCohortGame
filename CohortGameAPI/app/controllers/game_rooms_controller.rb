@@ -26,13 +26,9 @@ class GameRoomsController < ApplicationController
 
   # PATCH/PUT /game_rooms/1
   def update
-   
-    data = params['gameRoomInstance']
-    @game_room.turn = data.turn
-    @game_room.currentGame = data.currentGame
-    @game_room.save
+    @game_room.update(game_room_params)
     ActionCable.server.broadcast('Trivia_channel', {turn: @game_room.turn, currentGame: @game_room.currentGame})
-    
+  
   end
 
   # DELETE /game_rooms/1
@@ -48,6 +44,6 @@ class GameRoomsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def game_room_params
-      params.require(:game_room).permit(:name)
+      params.require(:game_room).permit(:name,:turn,:currentGame)
     end
 end

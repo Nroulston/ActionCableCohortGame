@@ -117,8 +117,9 @@ class GameRoom {
     Player.renderCurrentPlayer()
   }
 
-  setTurnFromBroadcast() {
-    
+  setInfoFromBroadcast(data) {
+    this.turn = data.turn
+    this.currentGame = data.currentGame
   }
 }
 
