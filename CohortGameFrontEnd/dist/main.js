@@ -748,7 +748,6 @@ class games_Games {
   static create() {
     gameRoomsGames = new games_Games()
     games_triviaGames.createAllTriviaGames()
-    gameRoomsGames.gameArray.push(new PressTheLetterFirstGame)
   }
 
   
@@ -809,7 +808,6 @@ class games_triviaGames extends games_Games{
   static createAllTriviaGames() {
     games_triviaGames.createBasicTriviaGames("Drinks all around" ,{instructions: "Everyone raise their drinks and say cheers"})
     games_triviaGames.createBasicTriviaGames("Group Pick", {instructions: "Everyone type a player in the chat \n \n The player called out the most drinks"})
-    games_triviaGames.createRoundTriviaGame("")
     games_triviaGames.createBasicTriviaGames("Hariest", {instructions: "Hariest player drinks"})
     games_triviaGames.createBasicTriviaGames("Hobbies", {instructions: "Tell Everyone your favourite hobby then drink"})
     games_triviaGames.createBasicTriviaGames("Text tell or drink", {instructions: "Every player must read their last text out loud or drink"})

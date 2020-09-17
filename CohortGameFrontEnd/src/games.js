@@ -18,7 +18,7 @@ const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
 // hoisted game variables
 let triviaConnection = undefined
 let gameBeingPlayed = undefined
-
+let triviaEventFlag = undefined
 class Games {
   constructor(gameArray = []) {
     this.players = {}
@@ -28,6 +28,7 @@ class Games {
   static create() {
     gameRoomsGames = new Games()
     triviaGames.createAllTriviaGames()
+
   }
 
   
@@ -133,7 +134,7 @@ class triviaGames extends Games{
         
         received(data) {
           gameRoomInstance.setInfoFromBroadcast(data)
-          
+          gameRoomsGames.renderGames()
           debugger
         },
       });
@@ -143,7 +144,10 @@ class triviaGames extends Games{
   
   
   static addEvents() {
+    if (!triviaEventFlag) {
     triviaSubmitBtn().addEventListener('click', super.nextGameCard)
+    triviaEventFlag = true
+    }
   }
 
   startGame() {
@@ -151,6 +155,7 @@ class triviaGames extends Games{
     
   }
   renderGameSpecifics() {
+    if (!triviaEventFlag) {
     // write an if statement that renders a small game card that keeps track of the turns it has left and it's rules.
     const row = document.createElement('div')
     const btn = document.createElement('a')
@@ -164,7 +169,7 @@ class triviaGames extends Games{
     gameCard().append(row)
     row.append(div)
     div.append(btn)
-    
+    }
   }
   
   
