@@ -34,7 +34,6 @@ class Games {
   
  
   renderGames() {
-    debugger
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
@@ -52,13 +51,8 @@ class Games {
 
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
-    const strongParamsGameRoom = {
-      game_room: {
-        turn: gameRoomInstance.turn,
-        currentGame: gameRoomInstance.currentGame,
-      }
-    }
-    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
+    
+    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length - 1) {
       gameRoomInstance.currentGame = 0
     } else {
       gameRoomInstance.currentGame += 1
@@ -133,9 +127,11 @@ class triviaGames extends Games{
         },
         
         received(data) {
+          
+          
           gameRoomInstance.setInfoFromBroadcast(data)
           gameRoomsGames.renderGames()
-          debugger
+          gameRoomInstance.setWhoseTurnItIs()
         },
       });
     }

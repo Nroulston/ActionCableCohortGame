@@ -738,7 +738,7 @@ const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
 // hoisted game variables
 let triviaConnection = undefined
 let gameBeingPlayed = undefined
-
+let triviaEventFlag = undefined
 class games_Games {
   constructor(gameArray = []) {
     this.players = {}
@@ -748,12 +748,12 @@ class games_Games {
   static create() {
     gameRoomsGames = new games_Games()
     games_triviaGames.createAllTriviaGames()
+
   }
 
   
  
   renderGames() {
-    debugger
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
     gameBeingPlayed.renderGameGeneric()
@@ -771,13 +771,8 @@ class games_Games {
 
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
-    const strongParamsGameRoom = {
-      game_room: {
-        turn: gameRoomInstance.turn,
-        currentGame: gameRoomInstance.currentGame,
-      }
-    }
-    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length ) {
+    
+    if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length - 1) {
       gameRoomInstance.currentGame = 0
     } else {
       gameRoomInstance.currentGame += 1
@@ -852,9 +847,11 @@ class games_triviaGames extends games_Games{
         },
         
         received(data) {
-          gameRoomInstance.setInfoFromBroadcast(data)
           
-          debugger
+          
+          gameRoomInstance.setInfoFromBroadcast(data)
+          gameRoomsGames.renderGames()
+          gameRoomInstance.setWhoseTurnItIs()
         },
       });
     }
@@ -863,7 +860,10 @@ class games_triviaGames extends games_Games{
   
   
   static addEvents() {
+    if (!triviaEventFlag) {
     triviaSubmitBtn().addEventListener('click', super.nextGameCard)
+    triviaEventFlag = true
+    }
   }
 
   startGame() {
@@ -871,6 +871,7 @@ class games_triviaGames extends games_Games{
     
   }
   renderGameSpecifics() {
+    if (!triviaEventFlag) {
     // write an if statement that renders a small game card that keeps track of the turns it has left and it's rules.
     const row = document.createElement('div')
     const btn = document.createElement('a')
@@ -884,7 +885,7 @@ class games_triviaGames extends games_Games{
     gameCard().append(row)
     row.append(div)
     div.append(btn)
-    
+    }
   }
   
   
@@ -1009,7 +1010,8 @@ class gameRoom_GameRoom {
       
   
       received(data) {
-       
+      
+        src_player.create(data.id, data.name)
         src_player.nameBoxCreator(data)
       },
       
@@ -1023,6 +1025,7 @@ class gameRoom_GameRoom {
   }
 
   setWhoseTurnItIs() {
+   
     this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     src_player.renderCurrentPlayer()
   }
@@ -1093,7 +1096,7 @@ class player_Player {
       .then(response => response.json())
       .then(json => { 
        
-        player_Player.create(json.id, json.name)
+        
         gameRoom.startGames(json)
         
        
@@ -1101,6 +1104,7 @@ class player_Player {
   }
 
   static renderCurrentPlayer() {
+   
     currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
    
   }

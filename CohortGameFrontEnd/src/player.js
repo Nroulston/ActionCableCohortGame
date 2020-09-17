@@ -56,7 +56,7 @@ class Player {
       .then(response => response.json())
       .then(json => { 
        
-        Player.create(json.id, json.name)
+        
         GameRoom.startGames(json)
         
        
@@ -64,6 +64,7 @@ class Player {
   }
 
   static renderCurrentPlayer() {
+   
     currentPlayerLI().innerText = `It is currently ${gameRoomInstance.currentTurnPlayer.name}'s turn`
    
   }

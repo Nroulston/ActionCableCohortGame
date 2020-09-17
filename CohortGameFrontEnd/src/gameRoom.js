@@ -99,7 +99,8 @@ class GameRoom {
       
   
       received(data) {
-       
+      
+        Player.create(data.id, data.name)
         Player.nameBoxCreator(data)
       },
       
@@ -113,6 +114,7 @@ class GameRoom {
   }
 
   setWhoseTurnItIs() {
+   
     this.currentTurnPlayer = allPlayer.currentPlayer(this.turn)
     Player.renderCurrentPlayer()
   }
