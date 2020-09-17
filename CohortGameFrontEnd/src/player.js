@@ -4,6 +4,7 @@ export const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
+export let player = undefined
 
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
@@ -15,7 +16,7 @@ class Player {
 
   static create(id, name) {
    
-    let player = new Player(id, name)
+    player = new Player(id, name)
     
     allPlayer.addPlayer(player);
     

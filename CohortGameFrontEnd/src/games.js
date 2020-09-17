@@ -5,7 +5,7 @@
 // todo play twentyone pilots tomorrow
 import {cable} from './index'
 import { gameRoomInstance } from "./gameRoom"
-import {HEADERS} from './player'
+import {HEADERS, player} from './player'
 
 export let gameRoomsGames = undefined
 
@@ -24,16 +24,14 @@ class Games {
     this.players = {}
     this.gameArray = gameArray
   }
-  static play() {
-
-  }
-
+ 
   static create() {
     gameRoomsGames = new Games()
-    gameRoomsGames.gameArray.push(new triviaGames("trivia" ,{instructions: "These are instructions"}))
+    triviaGames.createAllTriviaGames()
     gameRoomsGames.gameArray.push(new PressTheLetterFirstGame)
   }
 
+  
  
   renderGames() {
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
@@ -79,7 +77,15 @@ class triviaGames extends Games{
     this.name = name
     this.board = boardObj
   }
+  
+  static createAllTriviaGames() {
+    triviaGames.createBasicTrivaGames()
+    
 
+  }
+  static createBasicTrivaGames() {
+    gameRoomsGames.gameArray.push(new triviaGames("trivia" ,{instructions: "These are instructions"}))
+  } 
   static establishActionCableConnection() {
    triviaConnection = cable.subscriptions.create('TriviaChannel', {
       connected() {
@@ -125,19 +131,17 @@ class triviaGames extends Games{
   
   
 }
-
-
-
-  class PressTheLetterFirstGame extends Games{
-    constructor(name, players) {
-      super([])
-      this.name = "test"
-      this.players = players
-      this.board = {
-        instructions: "This is the test instructions"
-      }
+// figure out how to send the the winning player over in the fetch PUT/Patch request. Try each one to see if that matters. The winning player is the person who clicks the right letter. 
+class PressTheLetterFirstGame extends Games{
+  constructor(name, board,) {
+    super([])
+    this.name = name
+    this.players = players
+    this.board = {
+      instructions: "T"
     }
   }
+}
 export {
   Games,
   triviaGames,
