@@ -100,8 +100,9 @@ class GameRoom {
   
       received(data) {
       
-        Player.create(data.id, data.name)
+        Player.create(data.id, data.name, data.turnCounter, data.gameForTurnCounter)
         Player.nameBoxCreator(data)
+        
       },
       
     });

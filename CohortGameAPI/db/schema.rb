@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 2020_09_14_035550) do
   create_table "players", force: :cascade do |t|
     t.string "name"
     t.integer "game_room_id"
+    t.string "game_for_turn_tracker"
+    t.integer "turn_tracker"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

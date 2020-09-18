@@ -9,15 +9,16 @@ export const getNameBox = (playerId) => document.getElementById(playerId)
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 class Player {
-  constructor(id, name) {
+  constructor(id, name, turnCounter, gameNameforTurnCounter) {
     this.id = id;
     this.name = name;
-    this.turnCounter = undefined
+    this.turnCounter = turnCounter
+    this.gameNameforTurnCounter = gameNameforTurnCounter
   }
 
-  static create(id, name) {
+  static create(id, name, turnCounter, gameNameforTurnCounter) {
    
-    player = new Player(id, name)
+    player = new Player(id, name, turnCounter, gameNameforTurnCounter)
     
     allPlayer.addPlayer(player);
     
@@ -31,8 +32,12 @@ class Player {
      
       json.forEach( player => {
     
+        let createdPlayer = Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
         Player.nameBoxCreator(player)
-        Player.create(player.id, player.name)
+        if (createdPlayer.turnCounter) {
+          Player.renderGameCounter(createdPlayer)
+        }
+
       })
        Player.sendNameFetch()
     })
@@ -56,8 +61,6 @@ class Player {
       })
       .then(response => response.json())
       .then(json => { 
-       
-        
         GameRoom.startGames(json)
         
        
@@ -85,6 +88,21 @@ class Player {
     div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
     div2InsideOfBoxDiv.append(nameBoxSpan)
   }
+
+  static renderGameCounter(player) {
+    const nameBox = getNameBox(player.id)
+    const pGameName = document.createElement('p')
+    const pGameTurns = document.createElement('p')
+    pGameName.className = "white-text"
+    pGameTurns.className = 'white-text'
+    pGameName.innerText = player.gameNameforTurnCounter
+    pGameTurns.innerText = `${player.turnCounter} rounds left`
+    nameBox.firstChild.append(pGameName)
+    nameBox.append(pGameTurns)
+    player.turnCounter = turnCounter
+  }
+
+  
 }
 
 export default Player

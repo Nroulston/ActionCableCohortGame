@@ -1,10 +1,10 @@
 
 import {cable, allPlayer} from './index'
 import { gameRoomInstance } from "./gameRoom"
-import {HEADERS, getNameBox} from './player'
+import Player, {HEADERS, getNameBox} from './player'
 
 export let gameRoomsGames = undefined
-
+export let gameBeingPlayed = undefined
 // getters
 const gameTitleLi = () => document.querySelector('#col9 > div > ul > li.collection-header.blue-grey')
 const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div')
@@ -13,8 +13,8 @@ const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
 
 // variables set later inside class scopes
 let triviaConnection = undefined
-let gameBeingPlayed = undefined
 let triviaEventFlag = undefined
+
 class Games {
   constructor(gameArray = []) {
     this.players = {}
@@ -122,9 +122,17 @@ class triviaGames extends Games{
           gameRoomInstance.setWhoseTurnItIs()
           allPlayer.value().forEach( player => {
             if(player.turnCounter) {
-            const pGameCounter  = getNameBox(player.id).lastChild
-             player.turnCounter--
-             pGameCounter.innerText = `${player.turnCounter} rounds left`
+              const nameBox = getNameBox(player.id)
+              const pGameCounter  = nameBox.lastChild
+              player.turnCounter--
+              if (player.turnCounter === 0) {
+                while(nameBox.firstChild) {
+                  nameBox.removeChild(nameBox.lastChild)
+                }
+              }
+              else{ 
+              pGameCounter.innerText = `${player.turnCounter} rounds left`
+              }
             }
           })
         },

@@ -724,7 +724,7 @@ var action_cable_default = /*#__PURE__*/__webpack_require__.n(action_cable);
 
 
 let gameRoomsGames = undefined
-
+let gameBeingPlayed = undefined
 // getters
 const gameTitleLi = () => document.querySelector('#col9 > div > ul > li.collection-header.blue-grey')
 const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div')
@@ -733,8 +733,8 @@ const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
 
 // variables set later inside class scopes
 let triviaConnection = undefined
-let gameBeingPlayed = undefined
 let triviaEventFlag = undefined
+
 class games_Games {
   constructor(gameArray = []) {
     this.players = {}
@@ -842,9 +842,17 @@ class games_triviaGames extends games_Games{
           gameRoomInstance.setWhoseTurnItIs()
           allPlayer.value().forEach( player => {
             if(player.turnCounter) {
-            const pGameCounter  = getNameBox(player.id).lastChild
-             player.turnCounter--
-             pGameCounter.innerText = `${player.turnCounter} rounds left`
+              const nameBox = getNameBox(player.id)
+              const pGameCounter  = nameBox.lastChild
+              player.turnCounter--
+              if (player.turnCounter === 0) {
+                while(nameBox.firstChild) {
+                  nameBox.removeChild(nameBox.lastChild)
+                }
+              }
+              else{ 
+              pGameCounter.innerText = `${player.turnCounter} rounds left`
+              }
             }
           })
         },
@@ -1021,8 +1029,9 @@ class gameRoom_GameRoom {
   
       received(data) {
       
-        src_player.create(data.id, data.name)
+        src_player.create(data.id, data.name, data.turnCounter, data.gameForTurnCounter)
         src_player.nameBoxCreator(data)
+        
       },
       
     });
@@ -1059,15 +1068,16 @@ const getNameBox = (playerId) => document.getElementById(playerId)
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 class player_Player {
-  constructor(id, name) {
+  constructor(id, name, turnCounter, gameNameforTurnCounter) {
     this.id = id;
     this.name = name;
-    this.turnCounter = undefined
+    this.turnCounter = turnCounter
+    this.gameNameforTurnCounter = gameNameforTurnCounter
   }
 
-  static create(id, name) {
+  static create(id, name, turnCounter, gameNameforTurnCounter) {
    
-    player_player = new player_Player(id, name)
+    player_player = new player_Player(id, name, turnCounter, gameNameforTurnCounter)
     
     allPlayer.addPlayer(player_player);
     
@@ -1081,8 +1091,12 @@ class player_Player {
      
       json.forEach( player => {
     
+        let createdPlayer = player_Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
         player_Player.nameBoxCreator(player)
-        player_Player.create(player.id, player.name)
+        if (createdPlayer.turnCounter) {
+          player_Player.renderGameCounter(createdPlayer)
+        }
+
       })
        player_Player.sendNameFetch()
     })
@@ -1106,8 +1120,6 @@ class player_Player {
       })
       .then(response => response.json())
       .then(json => { 
-       
-        
         gameRoom.startGames(json)
         
        
@@ -1135,6 +1147,21 @@ class player_Player {
     div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
     div2InsideOfBoxDiv.append(nameBoxSpan)
   }
+
+  static renderGameCounter(player) {
+    const nameBox = getNameBox(player.id)
+    const pGameName = document.createElement('p')
+    const pGameTurns = document.createElement('p')
+    pGameName.className = "white-text"
+    pGameTurns.className = 'white-text'
+    pGameName.innerText = player.gameNameforTurnCounter
+    pGameTurns.innerText = `${player.turnCounter} rounds left`
+    nameBox.firstChild.append(pGameName)
+    nameBox.append(pGameTurns)
+    player.turnCounter = turnCounter
+  }
+
+  
 }
 
 /* harmony default export */ var src_player = (player_Player);
