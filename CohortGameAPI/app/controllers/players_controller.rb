@@ -38,7 +38,7 @@ class PlayersController < ApplicationController
 
   # DELETE /players/1
   def destroy
-    byebug
+    
     @player.destroy
   end
 

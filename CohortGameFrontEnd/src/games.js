@@ -58,7 +58,7 @@ class Games {
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify({gameRoomInstance})
+      body: JSON.stringify(gameRoomInstance)
       })
   }
 }
@@ -120,6 +120,13 @@ class triviaGames extends Games{
           gameRoomInstance.setInfoFromBroadcast(data)
           gameRoomsGames.renderGames()
           gameRoomInstance.setWhoseTurnItIs()
+          allPlayer.value().forEach( player => {
+            if(player.turnCounter) {
+            const pGameCounter  = getNameBox(player.id).lastChild
+             player.turnCounter--
+             pGameCounter.innerText = `${player.turnCounter} rounds left`
+            }
+          })
         },
       });
     }

@@ -26,7 +26,6 @@ class GameRoomsController < ApplicationController
 
   # PATCH/PUT /game_rooms/1
   def update
-    debugger
     @game_room.update(game_room_params)
     
     ActionCable.server.broadcast('Trivia_channel', {turn: @game_room.turn, currentGame: @game_room.currentGame})

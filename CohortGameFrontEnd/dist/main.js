@@ -778,7 +778,7 @@ class games_Games {
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify({gameRoomInstance: gameRoomInstance})
+      body: JSON.stringify(gameRoomInstance)
       })
   }
 }
@@ -840,6 +840,13 @@ class games_triviaGames extends games_Games{
           gameRoomInstance.setInfoFromBroadcast(data)
           gameRoomsGames.renderGames()
           gameRoomInstance.setWhoseTurnItIs()
+          allPlayer.value().forEach( player => {
+            if(player.turnCounter) {
+            const pGameCounter  = getNameBox(player.id).lastChild
+             player.turnCounter--
+             pGameCounter.innerText = `${player.turnCounter} rounds left`
+            }
+          })
         },
       });
     }
@@ -1047,7 +1054,7 @@ const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-let player = undefined 
+let player_player = undefined 
 const getNameBox = (playerId) => document.getElementById(playerId) 
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
@@ -1060,11 +1067,11 @@ class player_Player {
 
   static create(id, name) {
    
-    player = new player_Player(id, name)
+    player_player = new player_Player(id, name)
     
-    allPlayer.addPlayer(player);
+    allPlayer.addPlayer(player_player);
     
-    return player
+    return player_player
   }
   
   static getPlayers() {
