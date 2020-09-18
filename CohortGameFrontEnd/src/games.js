@@ -1,11 +1,7 @@
-// import GameRoom, { gameRoomInstance } from './gameRoom'
-// todo when game is over update GameRoom.turn
-// todo check to see the length of array and reset turn to zero if it will be longer than the array
-// todo update the current game index in the controller
-// todo play twentyone pilots tomorrow
+
 import {cable, allPlayer} from './index'
 import { gameRoomInstance } from "./gameRoom"
-import {HEADERS, player} from './player'
+import {HEADERS, getNameBox} from './player'
 
 export let gameRoomsGames = undefined
 
@@ -15,7 +11,7 @@ const gameCard = () => document.querySelector('#col9 > div > ul > li:nth-child(2
 const gameCardtext = () => document.querySelector('#col9 > div > ul > li:nth-child(2) > div > div')
 const triviaSubmitBtn = () => document.querySelector("#submitTrivia")
 
-// hoisted game variables
+// variables set later inside class scopes
 let triviaConnection = undefined
 let gameBeingPlayed = undefined
 let triviaEventFlag = undefined
@@ -31,8 +27,6 @@ class Games {
 
   }
 
-  
- 
   renderGames() {
     gameBeingPlayed = gameRoomsGames.gameArray[gameRoomInstance
     .currentGame]
@@ -40,8 +34,6 @@ class Games {
     gameBeingPlayed.renderGameSpecifics()
     gameBeingPlayed.startGame()
     gameBeingPlayed.constructor.addEvents()
-    
- 
   } 
   
   renderGameGeneric() {
@@ -66,18 +58,18 @@ class Games {
     fetch(`http://127.0.0.1:3000/game_rooms/${gameRoomInstance.id}`, {
       method: 'PATCH',
       headers: HEADERS,
-      body: JSON.stringify(gameRoomInstance)
+      body: JSON.stringify({gameRoomInstance})
       })
   }
 }
 
 class triviaGames extends Games{
   //board object takes attributes of instructions, and  and events
-  constructor(name, boardObj) {
+  constructor(name, boardObj, roundsCounter) {
     super([])
     this.name = name
     this.board = boardObj
-    this.roundsGameLasts
+    this.roundsCounter = roundsCounter
   }
   
   static createAllTriviaGames() {
@@ -111,24 +103,20 @@ class triviaGames extends Games{
 
   } 
 
-  static createRoundTriviaGame(nameStr, instructionsObj, roundsGameLasts) {
-    gameRoomsGames.gameArray.push(new triviaGames(nameStr, instructionsObj, roundsGameLasts))
+  static createRoundTriviaGame(nameStr, instructionsObj, roundsCounter) {
+    gameRoomsGames.gameArray.push(new triviaGames(nameStr, instructionsObj, roundsCounter))
   }
 
   static establishActionCableConnection() {
    if (!triviaConnection) {
       triviaConnection = cable.subscriptions.create('TriviaChannel', {
-        connected() {
-          
+        connected() {  
         },
 
         disconnected() {
-        
         },
         
         received(data) {
-          
-          
           gameRoomInstance.setInfoFromBroadcast(data)
           gameRoomsGames.renderGames()
           gameRoomInstance.setWhoseTurnItIs()
@@ -165,6 +153,21 @@ class triviaGames extends Games{
     gameCard().append(row)
     row.append(div)
     div.append(btn)
+    }
+    if (gameBeingPlayed.roundsCounter) {
+      const currentPlayer= allPlayer.currentPlayer(gameRoomInstance.turn)
+      const turnCounter = gameBeingPlayed.roundsCounter * allPlayer.value().length
+      const nameBox = getNameBox(currentPlayer.id)
+      const pGameName = document.createElement('p')
+      const pGameTurns = document.createElement('p')
+      pGameName.className = "white-text"
+      pGameTurns.className = 'white-text'
+      pGameName.innerText = gameBeingPlayed.name
+      pGameTurns.innerText = `${turnCounter} rounds left`
+      nameBox
+      nameBox.firstChild.append(pGameName)
+      nameBox.append(pGameTurns)
+      currentPlayer.turnCounter = turnCounter
     }
   }
   

@@ -4,14 +4,15 @@ export const HEADERS = {
   'Content-Type': 'application/json',
   'Accept' : 'application/json',
 };
-export let player = undefined
-
+export let player = undefined 
+export const getNameBox = (playerId) => document.getElementById(playerId) 
 const currentPlayerLI = () => document.querySelector('#col9 > div > ul > li:nth-child(3)')
 
 class Player {
   constructor(id, name) {
     this.id = id;
     this.name = name;
+    this.turnCounter = undefined
   }
 
   static create(id, name) {
