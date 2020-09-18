@@ -31,10 +31,11 @@ class Player {
     .then(json => { 
      
       json.forEach( player => {
-    
+   
         let createdPlayer = Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
-        Player.nameBoxCreator(player)
+        Player.nameBoxCreator(createdPlayer)
         if (createdPlayer.turnCounter) {
+          
           Player.renderGameCounter(createdPlayer)
         }
 
@@ -73,7 +74,7 @@ class Player {
    
   }
 
-  static nameBoxCreator(data) {
+  static nameBoxCreator(player) {
     const nameBoxDiv = document.createElement('div')
     const div1InsideOfBoxDiv = document.createElement('div')
     const div2InsideOfBoxDiv = document.createElement('div')
@@ -81,8 +82,8 @@ class Player {
     nameBoxDiv.className = "row"
     div2InsideOfBoxDiv.className = `card-panel teal`
     nameBoxSpan.className = 'white-text'
-    nameBoxSpan.setAttribute("id", data.id)
-    nameBoxSpan.innerText = data.name
+    nameBoxSpan.setAttribute("id", player.id)
+    nameBoxSpan.innerText = player.name
     column3div().append(nameBoxDiv)
     nameBoxDiv.append(div1InsideOfBoxDiv)
     div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
@@ -90,6 +91,7 @@ class Player {
   }
 
   static renderGameCounter(player) {
+    
     const nameBox = getNameBox(player.id)
     const pGameName = document.createElement('p')
     const pGameTurns = document.createElement('p')

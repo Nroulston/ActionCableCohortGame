@@ -124,12 +124,12 @@ class triviaGames extends Games{
             if(player.turnCounter) {
               
               const nameBox = getNameBox(player.id)
-              debugger
+              
               const pGameCounter  = nameBox.lastChild
               player.turnCounter--
               if (player.turnCounter === 0) {
-                debugger
-                while(nameBox.firstChild) {
+               
+                while(nameBox.firstElementChild) {
                   nameBox.removeChild(nameBox.lastChild)
                 }
               }
@@ -182,7 +182,7 @@ class triviaGames extends Games{
       pGameTurns.className = 'white-text'
       pGameName.innerText = gameBeingPlayed.name
       pGameTurns.innerText = `${turnCounter} rounds left`
-      debugger
+    
       nameBox.append(pGameName)
       nameBox.append(pGameTurns)
       currentPlayer.turnCounter = turnCounter

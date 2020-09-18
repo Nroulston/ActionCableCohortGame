@@ -844,18 +844,18 @@ class games_triviaGames extends games_Games{
             if(player.turnCounter) {
               
               const nameBox = getNameBox(player.id)
-              debugger
+              
               const pGameCounter  = nameBox.lastChild
               player.turnCounter--
-              // if (player.turnCounter === 0) {
-              //   debugger
-              //   while(nameBox.firstChild) {
-              //     nameBox.removeChild(nameBox.lastChild)
-              //   }
-              // }
-              // else{ 
+              if (player.turnCounter === 0) {
+               
+                while(nameBox.firstElementChild) {
+                  nameBox.removeChild(nameBox.lastChild)
+                }
+              }
+              else{ 
               pGameCounter.innerText = `${player.turnCounter} rounds left`
-              // }
+              }
             }
           })
         },
@@ -893,6 +893,7 @@ class games_triviaGames extends games_Games{
     div.append(btn)
     }
     if (gameBeingPlayed.roundsCounter) {
+      
       const currentPlayer= allPlayer.currentPlayer(gameRoomInstance.turn)
       const turnCounter = gameBeingPlayed.roundsCounter * allPlayer.value().length
       const nameBox = getNameBox(currentPlayer.id)
@@ -902,7 +903,7 @@ class games_triviaGames extends games_Games{
       pGameTurns.className = 'white-text'
       pGameName.innerText = gameBeingPlayed.name
       pGameTurns.innerText = `${turnCounter} rounds left`
-      debugger
+    
       nameBox.append(pGameName)
       nameBox.append(pGameTurns)
       currentPlayer.turnCounter = turnCounter
@@ -954,10 +955,7 @@ class gameRoom_GameRoom {
     games_Games.create()
     // todo pass in the currentGame, call the gameroom instance
     gameRoomsGames.renderGames()
-    
-    // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
-    // when submitting make sure to update back to index zero if you are at the length of the current player array.
-  }
+  } 
 
   static enterGame() { 
     inputForm().addEventListener('keydown', function(e) {
@@ -1093,11 +1091,12 @@ class player_Player {
     .then(json => { 
      
       json.forEach( player => {
-    
+   
         let createdPlayer = player_Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
-        player_Player.nameBoxCreator(player)
+        player_Player.nameBoxCreator(createdPlayer)
         if (createdPlayer.turnCounter) {
-          // Player.renderGameCounter(createdPlayer)
+          
+          player_Player.renderGameCounter(createdPlayer)
         }
 
       })
@@ -1135,7 +1134,7 @@ class player_Player {
    
   }
 
-  static nameBoxCreator(data) {
+  static nameBoxCreator(player) {
     const nameBoxDiv = document.createElement('div')
     const div1InsideOfBoxDiv = document.createElement('div')
     const div2InsideOfBoxDiv = document.createElement('div')
@@ -1143,8 +1142,8 @@ class player_Player {
     nameBoxDiv.className = "row"
     div2InsideOfBoxDiv.className = `card-panel teal`
     nameBoxSpan.className = 'white-text'
-    nameBoxSpan.setAttribute("id", data.id)
-    nameBoxSpan.innerText = data.name
+    nameBoxSpan.setAttribute("id", player.id)
+    nameBoxSpan.innerText = player.name
     column3div().append(nameBoxDiv)
     nameBoxDiv.append(div1InsideOfBoxDiv)
     div1InsideOfBoxDiv.append(div2InsideOfBoxDiv)
@@ -1152,6 +1151,7 @@ class player_Player {
   }
 
   static renderGameCounter(player) {
+    debugger
     const nameBox = getNameBox(player.id)
     const pGameName = document.createElement('p')
     const pGameTurns = document.createElement('p')
@@ -1159,7 +1159,7 @@ class player_Player {
     pGameTurns.className = 'white-text'
     pGameName.innerText = player.gameNameforTurnCounter
     pGameTurns.innerText = `${player.turnCounter} rounds left`
-    nameBox.firstChild.append(pGameName)
+    nameBox.append(pGameName)
     nameBox.append(pGameTurns)
     player.turnCounter = turnCounter
   }
@@ -1186,7 +1186,7 @@ class player_Player {
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 const cable = action_cable_default.a.createConsumer(API_WS_ROOT)
-// //getters
+//getters
 const body = () => document.querySelector(".container")
 const userLogInDiv = () => document.querySelector('#showLogIn')
 const inputForm = () => document.querySelector("#user_name")
@@ -1196,8 +1196,8 @@ const gameBoard = () => document.querySelector('#col9 > div > ul')
 
 
 
-// // the power of IIFE and closure all in one.
-// // Gives us a constant that has persistent memory of the player array
+ // the power of IIFE and closure all in one.
+ // Gives us a constant that has persistent memory of the player array
 const allPlayer = (function() {
   const playersArray = []
   function addPlayerToAll(player) {

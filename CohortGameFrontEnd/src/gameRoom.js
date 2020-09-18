@@ -22,10 +22,7 @@ class GameRoom {
     Games.create()
     // todo pass in the currentGame, call the gameroom instance
     gameRoomsGames.renderGames()
-    
-    // when you submit a game make sure to update the database instance's turn so that new people joining will be on the latest turn
-    // when submitting make sure to update back to index zero if you are at the length of the current player array.
-  }
+  } 
 
   static enterGame() { 
     inputForm().addEventListener('keydown', function(e) {
