@@ -15,7 +15,7 @@
 
 const API_WS_ROOT = 'ws://localhost:3000/cable';
 export const cable = ActionCable.createConsumer(API_WS_ROOT)
-// //getters
+//getters
 export const body = () => document.querySelector(".container")
 export const userLogInDiv = () => document.querySelector('#showLogIn')
 export const inputForm = () => document.querySelector("#user_name")
@@ -25,8 +25,8 @@ export const gameBoard = () => document.querySelector('#col9 > div > ul')
 
 
 
-// // the power of IIFE and closure all in one.
-// // Gives us a constant that has persistent memory of the player array
+ // the power of IIFE and closure all in one.
+ // Gives us a constant that has persistent memory of the player array
 export const allPlayer = (function() {
   const playersArray = []
   function addPlayerToAll(player) {

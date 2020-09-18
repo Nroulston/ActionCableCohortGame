@@ -127,15 +127,15 @@ class triviaGames extends Games{
               debugger
               const pGameCounter  = nameBox.lastChild
               player.turnCounter--
-              // if (player.turnCounter === 0) {
-              //   debugger
-              //   while(nameBox.firstChild) {
-              //     nameBox.removeChild(nameBox.lastChild)
-              //   }
-              // }
-              // else{ 
+              if (player.turnCounter === 0) {
+                debugger
+                while(nameBox.firstChild) {
+                  nameBox.removeChild(nameBox.lastChild)
+                }
+              }
+              else{ 
               pGameCounter.innerText = `${player.turnCounter} rounds left`
-              // }
+              }
             }
           })
         },

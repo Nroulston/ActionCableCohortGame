@@ -35,7 +35,7 @@ class Player {
         let createdPlayer = Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
         Player.nameBoxCreator(player)
         if (createdPlayer.turnCounter) {
-          // Player.renderGameCounter(createdPlayer)
+          Player.renderGameCounter(createdPlayer)
         }
 
       })
