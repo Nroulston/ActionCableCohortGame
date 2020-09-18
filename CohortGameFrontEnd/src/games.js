@@ -122,17 +122,20 @@ class triviaGames extends Games{
           gameRoomInstance.setWhoseTurnItIs()
           allPlayer.value().forEach( player => {
             if(player.turnCounter) {
+              
               const nameBox = getNameBox(player.id)
+              debugger
               const pGameCounter  = nameBox.lastChild
               player.turnCounter--
-              if (player.turnCounter === 0) {
-                while(nameBox.firstChild) {
-                  nameBox.removeChild(nameBox.lastChild)
-                }
-              }
-              else{ 
+              // if (player.turnCounter === 0) {
+              //   debugger
+              //   while(nameBox.firstChild) {
+              //     nameBox.removeChild(nameBox.lastChild)
+              //   }
+              // }
+              // else{ 
               pGameCounter.innerText = `${player.turnCounter} rounds left`
-              }
+              // }
             }
           })
         },
@@ -179,8 +182,8 @@ class triviaGames extends Games{
       pGameTurns.className = 'white-text'
       pGameName.innerText = gameBeingPlayed.name
       pGameTurns.innerText = `${turnCounter} rounds left`
-      nameBox
-      nameBox.firstChild.append(pGameName)
+      debugger
+      nameBox.append(pGameName)
       nameBox.append(pGameTurns)
       currentPlayer.turnCounter = turnCounter
     }

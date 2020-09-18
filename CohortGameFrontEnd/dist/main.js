@@ -842,17 +842,20 @@ class games_triviaGames extends games_Games{
           gameRoomInstance.setWhoseTurnItIs()
           allPlayer.value().forEach( player => {
             if(player.turnCounter) {
+              
               const nameBox = getNameBox(player.id)
+              debugger
               const pGameCounter  = nameBox.lastChild
               player.turnCounter--
-              if (player.turnCounter === 0) {
-                while(nameBox.firstChild) {
-                  nameBox.removeChild(nameBox.lastChild)
-                }
-              }
-              else{ 
+              // if (player.turnCounter === 0) {
+              //   debugger
+              //   while(nameBox.firstChild) {
+              //     nameBox.removeChild(nameBox.lastChild)
+              //   }
+              // }
+              // else{ 
               pGameCounter.innerText = `${player.turnCounter} rounds left`
-              }
+              // }
             }
           })
         },
@@ -899,8 +902,8 @@ class games_triviaGames extends games_Games{
       pGameTurns.className = 'white-text'
       pGameName.innerText = gameBeingPlayed.name
       pGameTurns.innerText = `${turnCounter} rounds left`
-      nameBox
-      nameBox.firstChild.append(pGameName)
+      debugger
+      nameBox.append(pGameName)
       nameBox.append(pGameTurns)
       currentPlayer.turnCounter = turnCounter
     }
@@ -1094,7 +1097,7 @@ class player_Player {
         let createdPlayer = player_Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
         player_Player.nameBoxCreator(player)
         if (createdPlayer.turnCounter) {
-          player_Player.renderGameCounter(createdPlayer)
+          // Player.renderGameCounter(createdPlayer)
         }
 
       })
@@ -1139,8 +1142,8 @@ class player_Player {
     const nameBoxSpan = document.createElement('span')
     nameBoxDiv.className = "row"
     div2InsideOfBoxDiv.className = `card-panel teal`
-    div2InsideOfBoxDiv.setAttribute("id", data.id)
     nameBoxSpan.className = 'white-text'
+    nameBoxSpan.setAttribute("id", data.id)
     nameBoxSpan.innerText = data.name
     column3div().append(nameBoxDiv)
     nameBoxDiv.append(div1InsideOfBoxDiv)

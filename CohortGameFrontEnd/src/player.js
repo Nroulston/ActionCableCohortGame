@@ -35,7 +35,7 @@ class Player {
         let createdPlayer = Player.create(player.id, player.name, player.turnCounter, player.gameNameforTurnCounter)
         Player.nameBoxCreator(player)
         if (createdPlayer.turnCounter) {
-          Player.renderGameCounter(createdPlayer)
+          // Player.renderGameCounter(createdPlayer)
         }
 
       })
@@ -80,8 +80,8 @@ class Player {
     const nameBoxSpan = document.createElement('span')
     nameBoxDiv.className = "row"
     div2InsideOfBoxDiv.className = `card-panel teal`
-    div2InsideOfBoxDiv.setAttribute("id", data.id)
     nameBoxSpan.className = 'white-text'
+    nameBoxSpan.setAttribute("id", data.id)
     nameBoxSpan.innerText = data.name
     column3div().append(nameBoxDiv)
     nameBoxDiv.append(div1InsideOfBoxDiv)
@@ -97,7 +97,7 @@ class Player {
     pGameTurns.className = 'white-text'
     pGameName.innerText = player.gameNameforTurnCounter
     pGameTurns.innerText = `${player.turnCounter} rounds left`
-    nameBox.firstChild.append(pGameName)
+    nameBox.append(pGameName)
     nameBox.append(pGameTurns)
     player.turnCounter = turnCounter
   }
