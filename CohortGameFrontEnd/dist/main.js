@@ -754,6 +754,7 @@ class games_Games {
     gameBeingPlayed.renderGameSpecifics()
     gameBeingPlayed.startGame()
     gameBeingPlayed.constructor.addEvents()
+    games_Games.deleteGameButton()
   } 
   
   renderGameGeneric() {
@@ -761,9 +762,28 @@ class games_Games {
     gameCardtext().innerText = this.board.instructions
   }
 
+  deleteGame() {
+    gameRoomsGames.gameArray.splice(gameRoomInstance.currentGame, 1)
+    games_Games.nextGameCard()
+  }
+
+  static deleteGameButton() {
+    const buttonFinder = () => document.querySelector('#game-delete-button')
+    if (buttonFinder() === null) {
+      
+    const button = document.createElement("BUTTON")
+    button.className = "waves-effect waves-light btn"
+    button.setAttribute('id', 'game-delete-button')
+    button.innerText = "Delete Game"
+    gameCard().append(button)
+    button.addEventListener('click', gameBeingPlayed.deleteGame)
+    }
+
+  }
+
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
-    
+    debugger
     if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length - 1) {
       gameRoomInstance.currentGame = 0
     } else {
@@ -893,7 +913,6 @@ class games_triviaGames extends games_Games{
     div.append(btn)
     }
     if (gameBeingPlayed.roundsCounter) {
-      
       const currentPlayer= allPlayer.currentPlayer(gameRoomInstance.turn)
       const turnCounter = gameBeingPlayed.roundsCounter * allPlayer.value().length
       const nameBox = getNameBox(currentPlayer.id)
@@ -1010,7 +1029,7 @@ class gameRoom_GameRoom {
     gameLI.append(gameCardDiv)
     gameCardDiv.append(cardDivContent)
     ul.append(currentPlayerLi)
-
+    
   }
 
   static stopDisplayingLogin() {
@@ -1151,7 +1170,7 @@ class player_Player {
   }
 
   static renderGameCounter(player) {
-    debugger
+    
     const nameBox = getNameBox(player.id)
     const pGameName = document.createElement('p')
     const pGameTurns = document.createElement('p')

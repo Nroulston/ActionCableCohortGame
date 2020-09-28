@@ -77,7 +77,7 @@ class GameRoom {
     gameLI.append(gameCardDiv)
     gameCardDiv.append(cardDivContent)
     ul.append(currentPlayerLi)
-
+    
   }
 
   static stopDisplayingLogin() {

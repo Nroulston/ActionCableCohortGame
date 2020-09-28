@@ -34,6 +34,7 @@ class Games {
     gameBeingPlayed.renderGameSpecifics()
     gameBeingPlayed.startGame()
     gameBeingPlayed.constructor.addEvents()
+    Games.deleteGameButton()
   } 
   
   renderGameGeneric() {
@@ -41,9 +42,28 @@ class Games {
     gameCardtext().innerText = this.board.instructions
   }
 
+  deleteGame() {
+    gameRoomsGames.gameArray.splice(gameRoomInstance.currentGame, 1)
+    Games.nextGameCard()
+  }
+
+  static deleteGameButton() {
+    const buttonFinder = () => document.querySelector('#game-delete-button')
+    if (buttonFinder() === null) {
+      
+    const button = document.createElement("BUTTON")
+    button.className = "waves-effect waves-light btn"
+    button.setAttribute('id', 'game-delete-button')
+    button.innerText = "Delete Game"
+    gameCard().append(button)
+    button.addEventListener('click', gameBeingPlayed.deleteGame)
+    }
+
+  }
+
   static nextGameCard() {
     //the below is testing when you get to the end of the array if you can hit it. If so you need to set turn, and currentgame to 0
-    
+    debugger
     if (gameRoomInstance.currentGame == gameRoomsGames.gameArray.length - 1) {
       gameRoomInstance.currentGame = 0
     } else {
